@@ -1,11 +1,13 @@
+import { Box, Center, Text, Heading } from '@chakra-ui/react'
+
 const Home = () => {
     return (
-      <div>
-        <h1> Welcome to our Homepage </h1>
-         <p>
-           SWE Gruppe 9 WS2023
-         </p>
-        </div>
+     <Center>
+      <Box w="400px" h="auto" textAlign="center">
+          <Heading>SWE Gruppe 9</Heading>
+            <Text>Welcome to our Homepage</Text>
+      </Box>
+     </Center>
     )
   };
   
