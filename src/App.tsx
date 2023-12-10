@@ -1,6 +1,6 @@
 import Navigation from './components/Navbar.tsx'
 import Home from './pages/HomePage.tsx'
-import Buchsuchen  from './pages/BuchCreatePage.tsx'
+import Buchsuchen  from './pages/BuchSuchenPage.tsx'
 import Buchanlegen from './pages/BuchCreatePage.tsx'
 import Login from './pages/LoginPage.tsx'
 
