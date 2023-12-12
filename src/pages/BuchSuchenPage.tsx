@@ -26,12 +26,15 @@ import {
     Box,
     RangeSliderFilledTrack,
     RangeSliderThumb,
+    useToast
   } from "@chakra-ui/react";
   
   const currentYear = new Date().getFullYear();
+
+  const Buchsuchen = () => {
+    const toast = useToast();
   
-  export default function Buchsuchen() {
-    return (
+      return (
       <div>
         <TableContainer>
           <Table variant="simple">
@@ -167,10 +170,24 @@ import {
             </Tbody>
           </Table>
         </TableContainer>
+      
+    <Box display="flex" justifyContent="center" alignItems="center" marginBottom="4">
+        <Button 
+          onClick={() => {
+            const examplePromise = new Promise((resolve) => {
+              setTimeout(() => resolve(200), 1000);
+            });
 
-        <Box display="flex" justifyContent="center" alignItems="center" marginBottom="4">
-      <Button colorScheme="gray">Suchen</Button>
-    </Box>
+            toast.promise(examplePromise, {
+              success: { title: 'Erfolgreich', description: 'Buch gefunden' },
+              error: { title: 'Fehler', description: 'Suche konnte nicht durchgeführt werden' },
+              loading: { title: 'Bitte warten', description: 'Vorgang wird ausgeführt' },
+            });
+          }}
+        >
+          Buch suchen
+        </Button>
+      </Box>
 
     <TableContainer>
   <Table variant='striped' colorScheme='gray'>
@@ -230,3 +247,4 @@ import {
     </div>
     );
   }
+  export default Buchsuchen;
