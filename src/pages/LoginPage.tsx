@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from 'axios';
+import {Stack, Button, Input, FormControl, Flex, Text} from '@chakra-ui/react'
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -19,32 +20,40 @@ const Login = () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
         if (err.ErrorRest) {
-            alert("Failed login: " + err.ErrorRest)
+            alert("Failed login: " + err.ErrorRest);
         }
     }
   }
 
   return (
-    <div>
-      <h1>Login</h1>
-      <input
-        type="text"
-        value={username}
-        placeholder="Username"
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <br />
-      <input
-        type="password"
-        value={password}
-        placeholder="Password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <br />
-      <button onClick={login}>
+   <Flex align = "center" justify="center">
+    <form action = 'submit'>
+      <Text as="h1" fontSize="2xl" fontWeight="bold" align = "center">
         Login
-      </button>
-    </div>
+      </Text>
+      <Stack spacing={3}>
+        <FormControl isRequired>
+          <Input
+            type="text"
+            value={username}
+            placeholder="Username"
+            aria-label = "Username"
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <Input
+            type="password"
+            value={password}
+            placeholder="Password"
+            aria-labbel = "Password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </FormControl>
+        <Button onClick={login} type = 'submit' variant='solid' borderColor = 'black'>
+         Sign up!
+        </Button>
+      </Stack>
+    </form>
+  </Flex>
   );
 };
 
