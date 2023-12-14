@@ -1,21 +1,32 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from 'axios';
 import { Center, Box, Heading, Button, Input, useToast } from '@chakra-ui/react';
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const toast = useToast();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []); 
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:3000/auth/login', {
+      const response = await axios.post('https://localhost:3000/auth/login', {
         username,
         password,
       });
 
-      const token = response.data.token;
+      const {token, expiresIn, roles} = response.data;
+      
+      setIsLoggedIn(true);
+
+      localStorage.setItem('token', token); 
 
       toast({
         title: 'Erfolgreich',
@@ -32,6 +43,32 @@ const Login = () => {
       });
     }
   };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
+    toast({
+      title: 'Erfolgreich',
+      description: 'Abmeldung ist erfolgreich',
+      status: 'success',
+    });
+  };
+  
+
+  if (isLoggedIn) {
+    return (
+      <div>
+        <Center>
+          <Box w="400px" h="auto" textAlign = 'center'>
+             <Heading marginBottom="2"> Sie sind eingeloggt !! </Heading>
+             <Button textAlign = 'center' onClick = {handleLogout}>  
+                Abmelden
+             </Button>
+          </Box>
+        </Center>
+      </div>
+    )
+  }
 
   return (
     <div>
