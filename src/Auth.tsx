@@ -1,25 +1,19 @@
 import { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 import axios from 'axios';
+import { useToast } from '@chakra-ui/react';
 
-interface AuthContextInterface {
-  isLoggedIn: boolean;
-  login: (username: string, password: string) => void;
-  logout: () => void;
-}
+const AuthContext = createContext({
+  isLoggedIn: false,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  login: (_username: string, _password: string) => {},
+  logout: () => {},
+});
 
-const AuthContext = createContext<AuthContextInterface | null>(null);
+const useAuthContext = () => useContext(AuthContext);
 
-// eslint-disable-next-line react-refresh/only-export-components
-export const useAuthContext = (): AuthContextInterface => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuthContext must be used within an AuthProvider');
-  }
-  return context;
-};
-
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
+const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const toast = useToast();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -35,25 +29,46 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         password,
       });
 
-      const { token } = response.data;
+      const { token , roles } = response.data;
+      console.log(token);
+      
       setIsLoggedIn(true);
       localStorage.setItem('token', token);
+      localStorage.setItem('roles', roles);
+
+      toast({
+        title: 'Erfolgreich',
+        description: 'Login erfolgreich',
+        status: 'success',
+      });
     } catch (error) {
-      // Handle login error
       console.error('Login error:', error);
+
+      toast({
+        title: 'Fehler',
+        description: 'Login fehlgeschlagen',
+        status: 'error',
+      });
     }
   };
 
   const logout = () => {
     localStorage.removeItem('token');
     setIsLoggedIn(false);
+
+    toast({
+      title: 'Erfolgreich',
+      description: 'Abmeldung ist erfolgreich',
+      status: 'success',
+    });
   };
 
-  const contextValue: AuthContextInterface = {
-    isLoggedIn,
-    login,
-    logout,
-  };
-
-  return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{isLoggedIn, login, logout}}> 
+        {children}
+    </AuthContext.Provider>
+  );
 };
+
+// eslint-disable-next-line react-refresh/only-export-components
+export {useAuthContext, AuthProvider};
