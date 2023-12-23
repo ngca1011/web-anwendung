@@ -14,11 +14,11 @@ import {
   RadioGroup,
   Stack,
   Radio,
-  useToast,
-} from '@chakra-ui/react'
+  useToast
+} from '@chakra-ui/react';
 
 const Buchanlegen = () => {
-  const toast = useToast()
+  const toast = useToast();
 
   return (
     <div
