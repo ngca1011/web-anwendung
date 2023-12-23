@@ -20,6 +20,23 @@ import {
 const Buchanlegen = () => {
   const toast = useToast();
 
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+
+  const handleRadioChange = (value: string) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      bookType: value,
+    }));
+  };
+
+
   return (
     <div
       style={{
