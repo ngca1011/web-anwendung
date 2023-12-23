@@ -11,8 +11,11 @@ const Navigation = () => {
       p={4}
       align="center"
       justify="space-between"
-      bg="gray.400"
+      bg="#B38B6D"
       color="white"
+      style = {{
+        backgroundImage: 'url("../../public/NavBar.png")',
+      }}
     >
       <Box>
         <Link href="/" fontSize="xl" fontWeight="bold">
@@ -23,10 +26,10 @@ const Navigation = () => {
       <Spacer />
 
       <Flex>
-            <Link href="/buchsuchen" mr={4}>
+            <Link href="/buchsuchen" mr={4} fontWeight="bold">
                 BuchSuchen
             </Link>
-            <Link href="/buchanlegen" mr={4}> 
+            <Link href="/buchanlegen" mr={4} fontWeight="bold"> 
                 BuchAnlegen
             </Link>
       </Flex>
@@ -38,7 +41,7 @@ const Navigation = () => {
           </Link>
         </Box>
         ) : (
-        <Link href="/anmelden">
+        <Link href="/anmelden" fontWeight="bold">
           Login
         </Link>
         )}

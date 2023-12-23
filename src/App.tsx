@@ -23,8 +23,17 @@ function App() {
   }
   return (
     <AuthProvider>
+       <div
+        style={{
+          backgroundImage: 'url("../public/background.jpg")', 
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          minHeight: '100vh', 
+        }}
+      >
       <Navigation />
       <Component />
+      </div>
     </AuthProvider>
   )
 }

@@ -21,7 +21,10 @@ const Buchanlegen = () => {
   const toast = useToast();
 
   return (
-    <div>
+    <div style = {{
+      backgroundColor: "white",
+      minHeight: "100vh",
+    }}>
       <TableContainer>
         <Table variant="simple">
           <Thead>
@@ -101,7 +104,7 @@ const Buchanlegen = () => {
         </Table>
       </TableContainer>
 
-      <Box display="flex" justifyContent="center" alignItems="center" marginBottom="4">
+      <Box display="flex" justifyContent="center" alignItems="center" marginBottom="4" marginTop="30">
         <Button 
           onClick={() => {
             const examplePromise = new Promise((resolve) => {
