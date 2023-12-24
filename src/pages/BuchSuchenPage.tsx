@@ -1,3 +1,5 @@
+import  { useState, useEffect } from 'react';
+
 import {
     FormHelperText,
     Input,
@@ -33,7 +35,83 @@ import {
 
   const Buchsuchen = () => {
     const toast = useToast();
+    interface Book {
+      title: string;
+      isbn: string;
+      rating: number;
+      bookType: string;
+      price: number;
+      discount: number;
+      available: boolean;
+      releaseYear: number;
+      homepage: string;
+    }
+    
+    const [books, setBooks] = useState<Book[]>([]);
+    const [searchParams, setSearchParams] = useState({
+      title: '',
+      isbn: '',
+      rating: [0, 10],
+      bookType: '',
+      price: [0, 10],
+      discount: [0, 10],
+      available: false,
+      releaseYear: currentYear, //muss nicht das aktuelle Jahr sein
+      homepage: '',
+    });
+
+    const handleInputChange = (field: string, value: string | number | boolean | number[]) => {
+      setSearchParams((prevParams) => ({
+        ...prevParams,
+        [field]: value,
+      }));
+    };
   
+  
+    const searchBooks = async () => {
+      try {
+        const response = await fetch('https://localhost:3000/rest', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+  
+        if (response.ok) {
+          const data = await response.json();
+          setBooks(data);
+        } else {
+          console.error('Fehler bei der Anfrage');
+        }
+      } catch (error) {
+        console.error('Fehler bei der Anfrage:', error);
+      }
+    };
+  
+    useEffect(() => {
+      searchBooks();
+    }, [searchParams]);
+  
+    const handleRatingChange = (values: number[]) => {
+      handleInputChange('rating', values);
+    };
+  
+    const handlePriceChange = (values: number[]) => {
+      handleInputChange('price', values);
+    };
+  
+    const handleDiscountChange = (values: number[]) => {
+      handleInputChange('discount', values);
+    };
+
+    const handleRadioButtonChange = (field: string, value: string) => {
+      handleInputChange(field, value);
+    };
+
+    const handleReleaseYearChange = (value: string | number) => {
+      handleInputChange('releaseYear', value);
+    };
+
       return (
       <div style = {{
         backgroundColor: "white",
@@ -52,7 +130,7 @@ import {
                 <Td>
                   <Box mb={4} maxW="300px">
                     <FormControl>
-                      <Input />
+                    <Input onChange={(e) => handleInputChange('title', e.target.value)} />
                     </FormControl>
                   </Box>
                 </Td>
@@ -62,7 +140,7 @@ import {
                 <Td>
                   <Box mb={4} maxW="300px">
                     <FormControl>
-                      <Input />
+                    <Input onChange={(e) => handleInputChange('isbn', e.target.value)} />
                       <FormHelperText>Example: "9780131969452"</FormHelperText>
                     </FormControl>
                   </Box>
@@ -75,6 +153,7 @@ import {
                     <RangeSlider
                       aria-label={["min", "max"]}
                       defaultValue={[0, 10]}
+                      onChange={(values) => handlePriceChange(values)}
                     >
                       <RangeSliderTrack>
                         <RangeSliderFilledTrack />
@@ -89,7 +168,7 @@ import {
                 <Td>Buchart</Td>
                 <Td>
                   <Box mb={4}>
-                    <RadioGroup>
+                  <RadioGroup onChange={(value) => handleRadioButtonChange('bookType', value)}>
                       <Stack direction="row">
                         <Radio value="1">Druckausgabe</Radio>
                         <Radio value="2">Kindle</Radio>
@@ -105,6 +184,7 @@ import {
                     <RangeSlider
                       aria-label={["min", "max"]}
                       defaultValue={[0, 10]}
+                      onChange={(values) => handleRatingChange(values)}
                     >
                       <RangeSliderTrack>
                         <RangeSliderFilledTrack />
@@ -122,6 +202,7 @@ import {
                     <RangeSlider
                       aria-label={["min", "max"]}
                       defaultValue={[0, 10]}
+                      onChange={(values) => handleDiscountChange(values)}
                     >
                       <RangeSliderTrack>
                         <RangeSliderFilledTrack />
@@ -137,7 +218,10 @@ import {
                 <Td>
                   <FormControl display="flex" alignItems="center">
                     <FormLabel mb="0"></FormLabel>
-                    <Switch id="lieferbar" />
+                    <Switch 
+                      id="lieferbar"
+                      onChange={(e) => handleInputChange('available', e.target.checked)} 
+                      />
                   </FormControl>
                 </Td>
               </Tr>
@@ -149,6 +233,7 @@ import {
                       defaultValue={currentYear}
                       min={1800}
                       max={currentYear}
+                      onChange={(value) => handleReleaseYearChange(value)}
                     >
                       <NumberInputField />
                       <NumberInputStepper>
@@ -191,61 +276,39 @@ import {
         </Button>
       </Box>
 
-    <TableContainer>
-  <Table variant='striped' colorScheme='gray'>
-    <TableCaption>Gefundene Bücher</TableCaption>
-    <Thead>
-      <Tr>
-        <Th>Titel</Th>
-        <Th>ISBN Nummer</Th>
-        <Th>Rating</Th>
-        <Th>Buchart</Th>
-        <Th>Preis</Th>
-        <Th>Rabatt</Th>
-        <Th>Lieferbar</Th>
-        <Th>Erscheinungsjahr</Th>
-        <Th>Homepage</Th>
-      </Tr>
-    </Thead>
-    <Tbody>
-      <Tr>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-      </Tr>
-      <Tr>
-        
-      <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-      </Tr>
-      <Tr>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-      </Tr>
-    </Tbody>
-  </Table>
-</TableContainer>
-
+      <TableContainer>
+        <Table variant='striped' colorScheme='gray'>
+          <TableCaption>Gefundene Bücher</TableCaption>
+          <Thead>
+            <Tr>
+              <Th>Titel</Th>
+              <Th>ISBN Nummer</Th>
+              <Th>Rating</Th>
+              <Th>Buchart</Th>
+              <Th>Preis</Th>
+              <Th>Rabatt</Th>
+              <Th>Lieferbar</Th>
+              <Th>Erscheinungsjahr</Th>
+              <Th>Homepage</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+          {books.map((book, index) => (
+              <Tr key={index}>
+                <Td>{book.title}</Td>
+                <Td>{book.isbn}</Td>
+                <Td>{book.rating}</Td>
+                <Td>{book.bookType}</Td>
+                <Td>{book.price}</Td>
+                <Td>{book.discount}</Td>
+                <Td>{book.available ? 'Ja' : 'Nein'}</Td>
+                <Td>{book.releaseYear}</Td>
+                <Td>{book.homepage}</Td>
+              </Tr>
+            ))}    
+          </Tbody>
+        </Table>
+      </TableContainer>
     </div>
     );
   }
