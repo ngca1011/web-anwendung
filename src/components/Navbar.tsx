@@ -1,6 +1,7 @@
 import { Box, Flex, Icon, Link, Spacer } from '@chakra-ui/react';
 import { MdPerson } from "react-icons/md";
 import {useAuthContext} from "../Auth.tsx";
+import { FiBook } from "react-icons/fi";
 
 const Navigation = () => {
 
@@ -19,7 +20,7 @@ const Navigation = () => {
     >
       <Box>
         <Link href="/" fontSize="xl" fontWeight="bold">
-            LOGO
+            <Icon as = {FiBook}/>
         </Link>
       </Box>
 
