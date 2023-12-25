@@ -234,32 +234,44 @@ import {
     <Box display="flex" justifyContent="center" alignItems="center" marginBottom="4">
     <Button 
   onClick={() => {
-    setSearchClicked(true); // Markiere die Suche als geklickt
-    const examplePromise = new Promise((resolve) => {
-      // Führe die asynchrone Logik hier aus
-      const fetchData = async () => {
-        try {
-          const response = await axios.get(`https://localhost:3000/rest?titel=${titelValue}`);
-          setFetchedData(response.data);
-          resolve(200);
-        } catch (error) {
-          console.error('Fehler beim Abrufen der Daten:', error);
-          resolve(500);
-        }
-      };
-  
-      fetchData();
-    });
-  
-    toast.promise(examplePromise, {
-      success: { title: 'Erfolgreich', description: 'Buch gefunden' },
-      error: { title: 'Fehler', description: 'Suche konnte nicht durchgeführt werden' },
-      loading: { title: 'Bitte warten', description: 'Vorgang wird ausgeführt' },
-    });
-  }}  
+    if (titelValue.trim() !== '') {
+      setSearchClicked(true); // Markiere die Suche als geklickt
+      const examplePromise = new Promise((resolve) => {
+        // Führe die asynchrone Logik hier aus
+        const fetchData = async () => {
+          try {
+            const response = await axios.get(`https://localhost:3000/rest?titel=${titelValue}`);
+            setFetchedData(response.data);
+            resolve(200);
+          } catch (error) {
+            console.error('Fehler beim Abrufen der Daten:', error);
+            resolve(500);
+          }
+        };
+
+        fetchData();
+      });
+
+      toast.promise(examplePromise, {
+        success: { title: 'Erfolgreich', description: 'Buch gefunden' },
+        error: { title: 'Fehler', description: 'Suche konnte nicht durchgeführt werden' },
+        loading: { title: 'Bitte warten', description: 'Vorgang wird ausgeführt' },
+      });
+    } else {
+      // Benutzer über leeres Suchfeld informieren
+      toast({
+        title: 'Achtung',
+        description: 'Bitte geben Sie einen Titel für die Suche ein.',
+        status: 'warning',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  }}
 >
   Buch suchen
 </Button>
+
 
 
       </Box>
