@@ -36,6 +36,9 @@ import {
 
   const Buchsuchen = () => {
     const toast = useToast();
+    const [titelValue, setTitelValue] = useState('');
+    const [searchClicked, setSearchClicked] = useState(false);
+
     interface Book {
       isbn: string;
       rating: number;
@@ -65,20 +68,22 @@ import {
     }
     const [fetchedData, setFetchedData] = useState<FetchedData>({ _embedded: { buecher: [] } });
 
-      useEffect(() => {
-        const getData = async () => {
-          try {
-            const response = await axios.get<FetchedData>(
-              'https://localhost:3000/rest?titel=Alpha'
-            );
-            setFetchedData(response.data);
-          } catch (error) {
-            console.error('Fehler beim Abrufen der Daten:');
-          }
-        };
+    useEffect(() => {
+      const getData = async () => {
+        try {
+          const response = await axios.get(`https://localhost:3000/rest?titel=${titelValue}`);
+          setFetchedData(response.data);
+        } catch (error) {
+          console.error('Fehler beim Abrufen der Daten:', error);
+        }
+      };
     
+      if (searchClicked) {
         getData();
-      }, []);
+        setSearchClicked(false); 
+      }
+    }, [titelValue, searchClicked]);
+    
     
 
       return (
@@ -94,16 +99,20 @@ import {
               </Tr>
             </Thead>
             <Tbody>
-              <Tr>
-                <Td>Titel</Td>
-                <Td>
-                  <Box mb={4} maxW="300px">
-                    <FormControl>
-                    <Input/>
-                    </FormControl>
-                  </Box>
-                </Td>
-              </Tr>
+            <Tr>
+  <Td>Titel</Td>
+  <Td>
+    <Box mb={4} maxW="300px">
+      <FormControl>
+        <Input
+          value={titelValue}
+          onChange={(event) => setTitelValue(event.target.value)}
+          placeholder="Titel eingeben"
+        />
+      </FormControl>
+    </Box>
+  </Td>
+</Tr>
               <Tr>
                 <Td>ISBN Number</Td>
                 <Td>
@@ -223,21 +232,36 @@ import {
         </TableContainer>
       
     <Box display="flex" justifyContent="center" alignItems="center" marginBottom="4">
-        <Button 
-          onClick={() => {
-            const examplePromise = new Promise((resolve) => {
-              setTimeout(() => resolve(200), 1000);
-            });
+    <Button 
+  onClick={() => {
+    setSearchClicked(true); // Markiere die Suche als geklickt
+    const examplePromise = new Promise((resolve) => {
+      // Führe die asynchrone Logik hier aus
+      const fetchData = async () => {
+        try {
+          const response = await axios.get(`https://localhost:3000/rest?titel=${titelValue}`);
+          setFetchedData(response.data);
+          resolve(200);
+        } catch (error) {
+          console.error('Fehler beim Abrufen der Daten:', error);
+          resolve(500);
+        }
+      };
+  
+      fetchData();
+    });
+  
+    toast.promise(examplePromise, {
+      success: { title: 'Erfolgreich', description: 'Buch gefunden' },
+      error: { title: 'Fehler', description: 'Suche konnte nicht durchgeführt werden' },
+      loading: { title: 'Bitte warten', description: 'Vorgang wird ausgeführt' },
+    });
+  }}  
+>
+  Buch suchen
+</Button>
 
-            toast.promise(examplePromise, {
-              success: { title: 'Erfolgreich', description: 'Buch gefunden' },
-              error: { title: 'Fehler', description: 'Suche konnte nicht durchgeführt werden' },
-              loading: { title: 'Bitte warten', description: 'Vorgang wird ausgeführt' },
-            });
-          }}
-        >
-          Buch suchen
-        </Button>
+
       </Box>
 
       <TableContainer>
