@@ -37,82 +37,49 @@ import {
   const Buchsuchen = () => {
     const toast = useToast();
     interface Book {
-      title: string;
       isbn: string;
       rating: number;
-      bookType: string;
-      price: number;
-      discount: number;
-      available: boolean;
-      releaseYear: number;
+      art: string;
+      preis: number;
+      rabatt: number;
+      lieferbar: boolean;
+      datum: string;
       homepage: string;
+      schlagwoerter: string[];
+      titel: {
+        titel: string;
+        untertitel: string;
+      };
+      _links: {
+        self: {
+          href: string;
+        };
+      };
     }
+    interface Embedded {
+      buecher: Book[];
+    }
+
+    interface FetchedData {
+      _embedded: Embedded;
+    }
+    const [fetchedData, setFetchedData] = useState<FetchedData>({ _embedded: { buecher: [] } });
+
+      useEffect(() => {
+        const getData = async () => {
+          try {
+            const response = await axios.get<FetchedData>(
+              'https://localhost:3000/rest?titel=Alpha'
+            );
+            setFetchedData(response.data);
+          } catch (error) {
+            console.error('Fehler beim Abrufen der Daten:');
+          }
+        };
     
-    const [books, setBooks] = useState<Book[]>([]);   
-    const [searchParams, setSearchParams] = useState({
-      title: '',
-      isbn: '',
-      rating: [0, 10],
-      bookType: '',
-      price: [0, 10],
-      discount: [0, 10],
-      available: false,
-      releaseYear: currentYear, //muss nicht das aktuelle Jahr sein
-      homepage: '',
-    });
-
-
-    const handleInputChange = (field: string, value: string | number | boolean | number[]) => {
-      setSearchParams((prevParams) => ({
-        ...prevParams,
-        [field]: value,
-      }));
-    };
-  
-  
-    const searchBooks = async () => {
-      try {
-        const url = 'https://localhost:3000/rest';
-
-        const response = await axios.get(url, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-  
-        if (response.status === 200) {
-          setBooks(response.data);
-        } else {
-          console.error('Fehler bei der Anfrage');
-        }
-      } catch (error) {
-        console.error('Fehler bei der Anfrage:', error);
-      }
-    };
-  
-    useEffect(() => {
-      searchBooks();
-    }, [searchParams]);
-  
-    const handleRatingChange = (values: number[]) => {
-      handleInputChange('rating', values);
-    };
-  
-    const handlePriceChange = (values: number[]) => {
-      handleInputChange('price', values);
-    };
-  
-    const handleDiscountChange = (values: number[]) => {
-      handleInputChange('discount', values);
-    };
-
-    const handleRadioButtonChange = (field: string, value: string) => {
-      handleInputChange(field, value);
-    };
-
-    const handleReleaseYearChange = (value: string | number) => {
-      handleInputChange('releaseYear', value);
-    };
+        getData();
+      }, []);
+    
 
       return (
       <div style = {{
@@ -132,7 +99,7 @@ import {
                 <Td>
                   <Box mb={4} maxW="300px">
                     <FormControl>
-                    <Input onChange={(e) => handleInputChange('title', e.target.value)} />
+                    <Input/>
                     </FormControl>
                   </Box>
                 </Td>
@@ -142,7 +109,7 @@ import {
                 <Td>
                   <Box mb={4} maxW="300px">
                     <FormControl>
-                    <Input onChange={(e) => handleInputChange('isbn', e.target.value)} />
+                    <Input/>
                       <FormHelperText>Example: "9780131969452"</FormHelperText>
                     </FormControl>
                   </Box>
@@ -155,7 +122,6 @@ import {
                     <RangeSlider
                       aria-label={["min", "max"]}
                       defaultValue={[0, 10]}
-                      onChange={(values) => handlePriceChange(values)}
                     >
                       <RangeSliderTrack>
                         <RangeSliderFilledTrack />
@@ -170,7 +136,7 @@ import {
                 <Td>Buchart</Td>
                 <Td>
                   <Box mb={4}>
-                  <RadioGroup onChange={(value) => handleRadioButtonChange('bookType', value)}>
+                  <RadioGroup>
                       <Stack direction="row">
                         <Radio value="1">Druckausgabe</Radio>
                         <Radio value="2">Kindle</Radio>
@@ -186,7 +152,6 @@ import {
                     <RangeSlider
                       aria-label={["min", "max"]}
                       defaultValue={[0, 10]}
-                      onChange={(values) => handleRatingChange(values)}
                     >
                       <RangeSliderTrack>
                         <RangeSliderFilledTrack />
@@ -204,7 +169,6 @@ import {
                     <RangeSlider
                       aria-label={["min", "max"]}
                       defaultValue={[0, 10]}
-                      onChange={(values) => handleDiscountChange(values)}
                     >
                       <RangeSliderTrack>
                         <RangeSliderFilledTrack />
@@ -222,7 +186,6 @@ import {
                     <FormLabel mb="0"></FormLabel>
                     <Switch 
                       id="lieferbar"
-                      onChange={(e) => handleInputChange('available', e.target.checked)} 
                       />
                   </FormControl>
                 </Td>
@@ -235,7 +198,6 @@ import {
                       defaultValue={currentYear}
                       min={1800}
                       max={currentYear}
-                      onChange={(value) => handleReleaseYearChange(value)}
                     >
                       <NumberInputField />
                       <NumberInputStepper>
@@ -283,30 +245,34 @@ import {
           <TableCaption>Gefundene Bücher</TableCaption>
           <Thead>
             <Tr>
-              <Th>Titel</Th>
-              <Th>ISBN Nummer</Th>
-              <Th>Rating</Th>
-              <Th>Buchart</Th>
-              <Th>Preis</Th>
-              <Th>Rabatt</Th>
-              <Th>Lieferbar</Th>
-              <Th>Erscheinungsjahr</Th>
-              <Th>Homepage</Th>
+            <Th>Titel</Th>
+            <Th>ISBN</Th>
+            <Th>Rating</Th>
+            <Th>Art</Th>
+            <Th>Preis</Th>
+            <Th>Rabatt</Th>
+            <Th>Lieferbar</Th>
+            <Th>Datum</Th>
+            <Th>Homepage</Th>
+            <Th>Schlagwörter</Th>
+            <Th>Link</Th>
             </Tr>
           </Thead>
           <Tbody>
-          {Array.isArray(books) && books.map((book1, index) => (
+          {fetchedData._embedded.buecher.map((buch, index) => (
               <Tr key={index}>
-                <Td>{book1.title}</Td>
-                <Td>{book1.isbn}</Td>
-                <Td>{book1.rating}</Td>
-                <Td>{book1.bookType}</Td>
-                <Td>{book1.price}</Td>
-                <Td>{book1.discount}</Td>
-                <Td>{book1.available ? 'Ja' : 'Nein'}</Td>
-                <Td>{book1.releaseYear}</Td>
-                <Td>{book1.homepage}</Td>
-              </Tr>
+                <Td>{buch.titel.titel}</Td>
+                <Td>{buch.isbn}</Td>
+                <Td>{buch.rating}</Td>
+                <Td>{buch.art}</Td>
+                <Td>{buch.preis}</Td>
+                <Td>{buch.rabatt}</Td>
+                <Td>{buch.lieferbar ? 'Ja' : 'Nein'}</Td>
+                <Td>{buch.datum}</Td>
+                <Td><a href={buch.homepage} target="_blank" rel="noopener noreferrer">{buch.homepage}</a></Td>
+                <Td>{buch.schlagwoerter.join(', ')}</Td>
+                <Td><a href={buch._links.self.href} target="_blank" rel="noopener noreferrer">{buch._links.self.href}</a></Td>
+             </Tr>
             ))}    
           </Tbody>
         </Table>
@@ -314,4 +280,4 @@ import {
     </div>
     );
   }
-  export default Buchsuchen;
+export default Buchsuchen;
