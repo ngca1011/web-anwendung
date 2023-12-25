@@ -275,7 +275,6 @@ import {
 
 
       </Box>
-
       <TableContainer>
         <Table variant='striped' colorScheme='gray'>
           <TableCaption>Gefundene Bücher</TableCaption>
@@ -299,10 +298,10 @@ import {
               <Tr key={index}>
                 <Td>{buch.titel.titel}</Td>
                 <Td>{buch.isbn}</Td>
-                <Td>{buch.rating}</Td>
+                <Td>{buch.rating}/10</Td>
                 <Td>{buch.art}</Td>
-                <Td>{buch.preis}</Td>
-                <Td>{buch.rabatt}</Td>
+                <Td>{buch.preis}€</Td>
+                <Td>{(buch.rabatt * 100).toFixed(2)}%</Td>
                 <Td>{buch.lieferbar ? 'Ja' : 'Nein'}</Td>
                 <Td>{buch.datum}</Td>
                 <Td><a href={buch.homepage} target="_blank" rel="noopener noreferrer">{buch.homepage}</a></Td>
