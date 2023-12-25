@@ -1,4 +1,5 @@
 import  { useState, useEffect } from 'react';
+import axios from 'axios';
 
 import {
     FormHelperText,
@@ -47,7 +48,7 @@ import {
       homepage: string;
     }
     
-    const [books, setBooks] = useState<Book[]>([]);
+    const [books, setBooks] = useState<Book[]>([]);   
     const [searchParams, setSearchParams] = useState({
       title: '',
       isbn: '',
@@ -60,6 +61,7 @@ import {
       homepage: '',
     });
 
+
     const handleInputChange = (field: string, value: string | number | boolean | number[]) => {
       setSearchParams((prevParams) => ({
         ...prevParams,
@@ -70,16 +72,16 @@ import {
   
     const searchBooks = async () => {
       try {
-        const response = await fetch('https://localhost:3000/rest', {
-          method: 'GET',
+        const url = 'https://localhost:3000/rest';
+
+        const response = await axios.get(url, {
           headers: {
             'Content-Type': 'application/json',
           },
         });
   
-        if (response.ok) {
-          const data = await response.json();
-          setBooks(data);
+        if (response.status === 200) {
+          setBooks(response.data);
         } else {
           console.error('Fehler bei der Anfrage');
         }
@@ -293,17 +295,17 @@ import {
             </Tr>
           </Thead>
           <Tbody>
-          {books.map((book, index) => (
+          {Array.isArray(books) && books.map((book1, index) => (
               <Tr key={index}>
-                <Td>{book.title}</Td>
-                <Td>{book.isbn}</Td>
-                <Td>{book.rating}</Td>
-                <Td>{book.bookType}</Td>
-                <Td>{book.price}</Td>
-                <Td>{book.discount}</Td>
-                <Td>{book.available ? 'Ja' : 'Nein'}</Td>
-                <Td>{book.releaseYear}</Td>
-                <Td>{book.homepage}</Td>
+                <Td>{book1.title}</Td>
+                <Td>{book1.isbn}</Td>
+                <Td>{book1.rating}</Td>
+                <Td>{book1.bookType}</Td>
+                <Td>{book1.price}</Td>
+                <Td>{book1.discount}</Td>
+                <Td>{book1.available ? 'Ja' : 'Nein'}</Td>
+                <Td>{book1.releaseYear}</Td>
+                <Td>{book1.homepage}</Td>
               </Tr>
             ))}    
           </Tbody>
