@@ -37,6 +37,7 @@ import {
   const Buchsuchen = () => {
     const toast = useToast();
     const [titelValue, setTitelValue] = useState('');
+    const [isbnValue, setIsbnValue] = useState('');
     const [searchClicked, setSearchClicked] = useState(false);
 
     interface Book {
@@ -71,7 +72,17 @@ import {
     useEffect(() => {
       const getData = async () => {
         try {
-          const response = await axios.get(`https://localhost:3000/rest?titel=${titelValue}`);
+          let apiUrl = 'https://localhost:3000/rest?';
+    
+          if (titelValue.trim() !== '') {
+            apiUrl += `titel=${titelValue}`;
+          }
+    
+          if (isbnValue.trim() !== '') {
+            apiUrl += `&isbn=${isbnValue}`;
+          }
+    
+          const response = await axios.get(apiUrl);
           setFetchedData(response.data);
         } catch (error) {
           console.error('Fehler beim Abrufen der Daten:', error);
@@ -80,10 +91,9 @@ import {
     
       if (searchClicked) {
         getData();
-        setSearchClicked(false); 
+        setSearchClicked(false);
       }
-    }, [titelValue, searchClicked]);
-    
+    }, [titelValue, isbnValue, searchClicked]);
     
 
       return (
@@ -104,21 +114,24 @@ import {
   <Td>
     <Box mb={4} maxW="300px">
       <FormControl>
-        <Input
-          value={titelValue}
-          onChange={(event) => setTitelValue(event.target.value)}
-          placeholder="Titel eingeben"
-        />
-      </FormControl>
-    </Box>
-  </Td>
-</Tr>
+          <Input
+              value={titelValue}
+              onChange={(event) => setTitelValue(event.target.value)}
+              placeholder="Titel eingeben"
+              />
+              </FormControl>
+              </Box>
+              </Td>
+              </Tr>
               <Tr>
                 <Td>ISBN Number</Td>
                 <Td>
                   <Box mb={4} maxW="300px">
                     <FormControl>
-                    <Input/>
+                    <Input
+                    value={isbnValue}
+                    onChange={(event) => setIsbnValue(event.target.value)}
+                    />
                       <FormHelperText>Example: "9780131969452"</FormHelperText>
                     </FormControl>
                   </Box>
@@ -234,13 +247,13 @@ import {
     <Box display="flex" justifyContent="center" alignItems="center" marginBottom="4">
     <Button 
   onClick={() => {
-    if (titelValue.trim() !== '') {
+    if (titelValue.trim() !== '' || isbnValue.trim() !== '') {
       setSearchClicked(true); // Markiere die Suche als geklickt
       const examplePromise = new Promise((resolve) => {
         // Führe die asynchrone Logik hier aus
         const fetchData = async () => {
           try {
-            const response = await axios.get(`https://localhost:3000/rest?titel=${titelValue}`);
+            const response = await axios.get(`https://localhost:3000/rest?titel=${titelValue}&isbn=${isbnValue}`);
             setFetchedData(response.data);
             resolve(200);
           } catch (error) {
@@ -271,9 +284,6 @@ import {
 >
   Buch suchen
 </Button>
-
-
-
       </Box>
       <TableContainer>
         <Table variant='striped' colorScheme='gray'>
