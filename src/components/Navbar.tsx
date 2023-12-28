@@ -19,7 +19,8 @@ const Navigation = () => {
     >
       <Box>
         <Link href="/" fontSize="xl" fontWeight="bold">
-            LOGO
+            <img src = "src\components\logo.png" alt = "H-KA" />
+            Home
         </Link>
       </Box>
 
