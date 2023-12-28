@@ -32,7 +32,7 @@ import {
 import {useState} from "react"; 
 import { MdGraphicEq } from "react-icons/md";
 
-function RangeSliderMarkExample() {
+function RangeSliderMarkRating() {
   const [sliderValue, setSliderValue] = useState([0, 5])
   return (
     <RangeSlider aria-label={['min', 'max']} defaultValue={[0, 5]} 
@@ -40,19 +40,6 @@ function RangeSliderMarkExample() {
       <RangeSliderMark value={5} mt='1' ml='-2,5' fontSize='sm'>
         5
       </RangeSliderMark>
-      {/* <RangeSliderMark value={2} mt='1' ml='-2.5' fontSize='sm'>
-        2
-      </RangeSliderMark> */}
-      {/* <RangeSliderMark
-        value={sliderValue[0]}
-        textAlign='center'
-        bg='blue'
-        color='white'
-        mt='-10'
-        ml='-5'
-        w='12'
-      >
-      </RangeSliderMark> */}
       <RangeSliderMark
         value={sliderValue[1]}
         textAlign='center'
@@ -68,9 +55,94 @@ function RangeSliderMarkExample() {
       <RangeSliderTrack>
         <RangeSliderFilledTrack/>
       </RangeSliderTrack>
-      {/* <RangeSliderThumb boxSize={4} index={0}>
+      <RangeSliderThumb boxSize={3} index={1}>
         <Box color='tomato' as={MdGraphicEq} />
-      </RangeSliderThumb> */}
+      </RangeSliderThumb>
+    </RangeSlider>
+  )
+}
+
+function RangeSliderPreis() {
+  const [sliderValue, setSliderValue] = useState([10, 50])
+  return (
+    <RangeSlider aria-label={['min', 'max']} defaultValue={[10, 50]} 
+          min={0} max={100} onChange={(val) => setSliderValue(val)}>
+      <RangeSliderMark value={50} mt='1' ml='-2,5' fontSize='sm'>
+        50
+      </RangeSliderMark>
+      <RangeSliderMark value={10} mt='1' ml='-2.5' fontSize='sm'>
+        10
+      </RangeSliderMark>
+      <RangeSliderMark
+        value={sliderValue[0]}
+        textAlign='center'
+        bg='blue'
+        color='white'
+        mt='-7'
+        ml='-1.5'
+        w='8'
+      >{sliderValue[0]}€
+      </RangeSliderMark>
+      <RangeSliderMark
+        value={sliderValue[1]}
+        textAlign='center'
+        bg='blue'
+        color='white'
+        mt='-7'
+        ml='-1.5'
+        width='8'
+      >{sliderValue[1]}€
+      </RangeSliderMark>
+      <RangeSliderTrack>
+        <RangeSliderFilledTrack/>
+      </RangeSliderTrack>
+      <RangeSliderThumb boxSize={4} index={0}>
+        <Box color='tomato' as={MdGraphicEq} />
+      </RangeSliderThumb>
+      <RangeSliderThumb boxSize={3} index={1}>
+        <Box color='tomato' as={MdGraphicEq} />
+      </RangeSliderThumb>
+    </RangeSlider>
+  )
+}
+
+function RangeSliderRabatt() {
+  const [sliderValue, setSliderValue] = useState([25, 75])
+  return (
+    <RangeSlider aria-label={['min', 'max']} defaultValue={[25, 75]} 
+          min={0} max={100} onChange={(val) => setSliderValue(val)}>
+      <RangeSliderMark value={75} mt='1' ml='-2,5' fontSize='sm'>
+        75
+      </RangeSliderMark>
+      <RangeSliderMark value={25} mt='1' ml='-2.5' fontSize='sm'>
+        25
+      </RangeSliderMark>
+      <RangeSliderMark
+        value={sliderValue[0]}
+        textAlign='center'
+        bg='blue'
+        color='white'
+        mt='-7'
+        ml='-1.5'
+        w='8'
+      >{sliderValue[0]}%
+      </RangeSliderMark>
+      <RangeSliderMark
+        value={sliderValue[1]}
+        textAlign='center'
+        bg='blue'
+        color='white'
+        mt='-7'
+        ml='-1.5'
+        width='8'
+      >{sliderValue[1]}%
+      </RangeSliderMark>
+      <RangeSliderTrack>
+        <RangeSliderFilledTrack/>
+      </RangeSliderTrack>
+      <RangeSliderThumb boxSize={4} index={0}>
+        <Box color='tomato' as={MdGraphicEq} />
+      </RangeSliderThumb>
       <RangeSliderThumb boxSize={3} index={1}>
         <Box color='tomato' as={MdGraphicEq} />
       </RangeSliderThumb>
@@ -120,16 +192,7 @@ function RangeSliderMarkExample() {
                 <Td>Rating</Td>
                 <Td>
                   <Box mb={4} maxW="300px">
-                    {/* <RangeSlider
-                      aria-label={["min", "max"]}
-                      defaultValue={[0, 1]}
-                    >
-                      <RangeSliderTrack> */}
-                        <RangeSliderMarkExample />
-                      {/* </RangeSliderTrack>
-                      <RangeSliderThumb index={0} />
-                      <RangeSliderThumb index={1} />
-                    </RangeSlider> */}
+                        <RangeSliderMarkRating />
                   </Box>
                 </Td>
               </Tr>
@@ -150,16 +213,7 @@ function RangeSliderMarkExample() {
                 <Td>Preis</Td>
                 <Td>
                   <Box maxW="300px">
-                    <RangeSlider
-                      aria-label={["min", "max"]}
-                      defaultValue={[0, 10]}
-                    >
-                      <RangeSliderTrack>
-                        <RangeSliderFilledTrack />
-                      </RangeSliderTrack>
-                      <RangeSliderThumb index={0} />
-                      <RangeSliderThumb index={1} />
-                    </RangeSlider>
+                    <RangeSliderPreis/>
                   </Box>
                 </Td>
               </Tr>
@@ -167,16 +221,7 @@ function RangeSliderMarkExample() {
                 <Td>Rabatt</Td>
                 <Td>
                   <Box maxW="300px">
-                    <RangeSlider
-                      aria-label={["min", "max"]}
-                      defaultValue={[0, 10]}
-                    >
-                      <RangeSliderTrack>
-                        <RangeSliderFilledTrack />
-                      </RangeSliderTrack>
-                      <RangeSliderThumb index={0} />
-                      <RangeSliderThumb index={1} />
-                    </RangeSlider>
+                    <RangeSliderRabatt/>
                   </Box>
                 </Td>
               </Tr>
