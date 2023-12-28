@@ -26,9 +26,57 @@ import {
     Box,
     RangeSliderFilledTrack,
     RangeSliderThumb,
-    useToast
+    useToast,
+    RangeSliderMark,
   } from "@chakra-ui/react";
-  
+import {useState} from "react"; 
+import { MdGraphicEq } from "react-icons/md";
+
+function RangeSliderMarkExample() {
+  const [sliderValue, setSliderValue] = useState([0, 5])
+  return (
+    <RangeSlider aria-label={['min', 'max']} defaultValue={[0, 5]} 
+          min={0} max={10} onChange={(val) => setSliderValue(val)}>
+      <RangeSliderMark value={5} mt='1' ml='-2,5' fontSize='sm'>
+        5
+      </RangeSliderMark>
+      {/* <RangeSliderMark value={2} mt='1' ml='-2.5' fontSize='sm'>
+        2
+      </RangeSliderMark> */}
+      {/* <RangeSliderMark
+        value={sliderValue[0]}
+        textAlign='center'
+        bg='blue'
+        color='white'
+        mt='-10'
+        ml='-5'
+        w='12'
+      >
+      </RangeSliderMark> */}
+      <RangeSliderMark
+        value={sliderValue[1]}
+        textAlign='center'
+        bg='blue'
+        color='white'
+        mt='-7'
+        ml='-1.5'
+        width='6'
+        height='6'
+        border-radius='50%'
+      >{sliderValue[1]}
+      </RangeSliderMark>
+      <RangeSliderTrack>
+        <RangeSliderFilledTrack/>
+      </RangeSliderTrack>
+      {/* <RangeSliderThumb boxSize={4} index={0}>
+        <Box color='tomato' as={MdGraphicEq} />
+      </RangeSliderThumb> */}
+      <RangeSliderThumb boxSize={3} index={1}>
+        <Box color='tomato' as={MdGraphicEq} />
+      </RangeSliderThumb>
+    </RangeSlider>
+  )
+}
   const currentYear = new Date().getFullYear();
 
   const Buchsuchen = () => {
@@ -72,16 +120,16 @@ import {
                 <Td>Rating</Td>
                 <Td>
                   <Box mb={4} maxW="300px">
-                    <RangeSlider
+                    {/* <RangeSlider
                       aria-label={["min", "max"]}
-                      defaultValue={[0, 10]}
+                      defaultValue={[0, 1]}
                     >
-                      <RangeSliderTrack>
-                        <RangeSliderFilledTrack />
-                      </RangeSliderTrack>
+                      <RangeSliderTrack> */}
+                        <RangeSliderMarkExample />
+                      {/* </RangeSliderTrack>
                       <RangeSliderThumb index={0} />
                       <RangeSliderThumb index={1} />
-                    </RangeSlider>
+                    </RangeSlider> */}
                   </Box>
                 </Td>
               </Tr>
