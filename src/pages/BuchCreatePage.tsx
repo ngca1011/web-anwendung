@@ -16,6 +16,7 @@ import {
   Radio,
   useToast
 } from '@chakra-ui/react';
+import { useState } from 'react';
 
 const Buchanlegen = () => {
   const [formData, setFormData] = useState({
@@ -67,7 +68,11 @@ const Buchanlegen = () => {
               <Td>
                 <Box maxW='300px'>
                   <FormControl>
-                    <Input />
+                    <Input
+                      name="title"
+                      value={formData.titel}
+                      onChange={handleInputChange}
+                    />
                   </FormControl>
                 </Box>
               </Td>
@@ -77,7 +82,11 @@ const Buchanlegen = () => {
               <Td>
                 <Box maxW='300px'>
                   <FormControl>
-                    <Input />
+                    <Input
+                      name="isbn"
+                      value={formData.isbn}
+                      onChange={handleInputChange}
+                    />
                   </FormControl>
                 </Box>
               </Td>
@@ -86,10 +95,13 @@ const Buchanlegen = () => {
               <Td>Buchart</Td>
               <Td>
                 <Box mb={4}>
-                  <RadioGroup>
-                    <Stack direction='row'>
-                      <Radio value='1'>Druckausgabe</Radio>
-                      <Radio value='2'>Kindle</Radio>
+                  <RadioGroup
+                    value={formData.art}
+                    onChange={(value) => handleRadioChange(value.toString())}
+                  >
+                    <Stack direction="row">
+                      <Radio value="1">Druckausgabe</Radio>
+                      <Radio value="2">Kindle</Radio>
                     </Stack>
                   </RadioGroup>
                 </Box>
@@ -100,7 +112,11 @@ const Buchanlegen = () => {
               <Td>
                 <Box maxW='300px'>
                   <FormControl>
-                    <Input />
+                    <Input
+                      name="price"
+                      value={formData.preis}
+                      onChange={handleInputChange}
+                    />
                   </FormControl>
                 </Box>
               </Td>
@@ -110,7 +126,11 @@ const Buchanlegen = () => {
               <Td>
                 <Box maxW='300px'>
                   <FormControl>
-                    <Input />
+                    <Input
+                      name="discount"
+                      value={formData.rabatt}
+                      onChange={handleInputChange}
+                    />
                   </FormControl>
                 </Box>
               </Td>
@@ -120,7 +140,11 @@ const Buchanlegen = () => {
               <Td>
                 <Box maxW='300px'>
                   <FormControl>
-                    <Input />
+                    <Input
+                      name="homepage"
+                      value={formData.homepage}
+                      onChange={handleInputChange}
+                    />
                   </FormControl>
                 </Box>
               </Td>
