@@ -18,6 +18,15 @@ import {
 } from '@chakra-ui/react';
 
 const Buchanlegen = () => {
+  const [formData, setFormData] = useState({
+    titel: '',
+    isbn: '',
+    art: '1',
+    preis: '',
+    rabatt: '',
+    homepage: '',
+  });
+  
   const toast = useToast();
 
 
