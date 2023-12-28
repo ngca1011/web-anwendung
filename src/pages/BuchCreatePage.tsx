@@ -46,6 +46,26 @@ const Buchanlegen = () => {
     }));
   };
 
+  const handleBuchAnlegen = async () => {
+    try {
+      await axios.post('https://localhost:3000/rest', formData); 
+      toast({
+        title: 'Erfolgreich',
+        description: 'Buch erfolgreich angelegt',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: 'Fehler',
+        description: 'Buch konnte nicht angelegt werden',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
 
   return (
     <div
@@ -154,28 +174,8 @@ const Buchanlegen = () => {
         </Table>
       </TableContainer>
 
-      <Box
-        display='flex'
-        justifyContent='center'
-        alignItems='center'
-        marginBottom='4'
-        marginTop='30'
-      >
-        <Button
-          onClick={() => {
-            const examplePromise = new Promise((resolve) => {
-              setTimeout(() => {
-                resolve(200)
-              }, 1000)
-            })
-
-            toast.promise(examplePromise, {
-              success: { title: 'Erfolgreich', description: 'Buch erfolgreich angelegt' },
-              error: { title: 'Fehler', description: 'Buch konnte nicht angelegt werden' },
-              loading: { title: 'Bitte warten', description: 'Vorgang wird ausgeführt' },
-            })
-          }}
-        >
+      <Box display="flex" justifyContent="center" alignItems="center" marginBottom="4">
+        <Button onClick={handleBuchAnlegen}>
           Buch anlegen
         </Button>
       </Box>
