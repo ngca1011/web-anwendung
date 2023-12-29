@@ -1,164 +1,42 @@
+import  { useState, useEffect } from 'react';
+import axios from 'axios';
+
 import {
     FormHelperText,
     Input,
-    RangeSlider,
-    Radio,
-    RadioGroup,
+    Checkbox,
     Stack,
-    Switch,
-    FormControl,
-    FormLabel,
-    RangeSliderTrack,
-    NumberInput,
+    RadioGroup,
     Table,
+    FormControl,
+    Radio,
     Thead,
     Tbody,
+    Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
     Tr,
     Th,
     Td,
     TableCaption,
     TableContainer,
-    NumberInputField,
-    NumberInputStepper,
-    NumberIncrementStepper,
     Button,
-    NumberDecrementStepper,
     Box,
-    RangeSliderFilledTrack,
-    RangeSliderThumb,
-    useToast,
-    RangeSliderMark,
+    useToast
   } from "@chakra-ui/react";
-import {useState, useEffect} from "react"; 
-import axios from "axios";
-import { MdGraphicEq } from "react-icons/md";
-
-function RangeSliderMarkRating() {
-  const [sliderValue, setSliderValue] = useState([0, 5])
-  return (
-    <RangeSlider aria-label={['min', 'max']} defaultValue={[0, 5]} 
-          min={0} max={10} onChange={(val) => setSliderValue(val)}>
-      <RangeSliderMark value={5} mt='1' ml='-2,5' fontSize='sm'>
-        5
-      </RangeSliderMark>
-      <RangeSliderMark
-        value={sliderValue[1]}
-        textAlign='center'
-        bg='blue'
-        color='white'
-        mt='-7'
-        ml='-1.5'
-        width='6'
-        height='6'
-        border-radius='50%'
-      >{sliderValue[1]}
-      </RangeSliderMark>
-      <RangeSliderTrack>
-        <RangeSliderFilledTrack/>
-      </RangeSliderTrack>
-      <RangeSliderThumb boxSize={3} index={1}>
-        <Box color='tomato' as={MdGraphicEq} />
-      </RangeSliderThumb>
-    </RangeSlider>
-  )
-}
-
-function RangeSliderPreis() {
-  const [sliderValue, setSliderValue] = useState([10, 50])
-  return (
-    <RangeSlider aria-label={['min', 'max']} defaultValue={[10, 50]} 
-          min={0} max={100} onChange={(val) => setSliderValue(val)}>
-      <RangeSliderMark value={50} mt='1' ml='-2,5' fontSize='sm'>
-        50
-      </RangeSliderMark>
-      <RangeSliderMark value={10} mt='1' ml='-2.5' fontSize='sm'>
-        10
-      </RangeSliderMark>
-      <RangeSliderMark
-        value={sliderValue[0]}
-        textAlign='center'
-        bg='blue'
-        color='white'
-        mt='-7'
-        ml='-1.5'
-        w='8'
-      >{sliderValue[0]}€
-      </RangeSliderMark>
-      <RangeSliderMark
-        value={sliderValue[1]}
-        textAlign='center'
-        bg='blue'
-        color='white'
-        mt='-7'
-        ml='-1.5'
-        width='8'
-      >{sliderValue[1]}€
-      </RangeSliderMark>
-      <RangeSliderTrack>
-        <RangeSliderFilledTrack/>
-      </RangeSliderTrack>
-      <RangeSliderThumb boxSize={4} index={0}>
-        <Box color='tomato' as={MdGraphicEq} />
-      </RangeSliderThumb>
-      <RangeSliderThumb boxSize={3} index={1}>
-        <Box color='tomato' as={MdGraphicEq} />
-      </RangeSliderThumb>
-    </RangeSlider>
-  )
-}
-
-function RangeSliderRabatt() {
-  const [sliderValue, setSliderValue] = useState([25, 75])
-  return (
-    <RangeSlider aria-label={['min', 'max']} defaultValue={[25, 75]} 
-          min={0} max={100} onChange={(val) => setSliderValue(val)}>
-      <RangeSliderMark value={75} mt='1' ml='-2,5' fontSize='sm'>
-        75
-      </RangeSliderMark>
-      <RangeSliderMark value={25} mt='1' ml='-2.5' fontSize='sm'>
-        25
-      </RangeSliderMark>
-      <RangeSliderMark
-        value={sliderValue[0]}
-        textAlign='center'
-        bg='blue'
-        color='white'
-        mt='-7'
-        ml='-1.5'
-        w='8'
-      >{sliderValue[0]}%
-      </RangeSliderMark>
-      <RangeSliderMark
-        value={sliderValue[1]}
-        textAlign='center'
-        bg='blue'
-        color='white'
-        mt='-7'
-        ml='-1.5'
-        width='8'
-      >{sliderValue[1]}%
-      </RangeSliderMark>
-      <RangeSliderTrack>
-        <RangeSliderFilledTrack/>
-      </RangeSliderTrack>
-      <RangeSliderThumb boxSize={4} index={0}>
-        <Box color='tomato' as={MdGraphicEq} />
-      </RangeSliderThumb>
-      <RangeSliderThumb boxSize={3} index={1}>
-        <Box color='tomato' as={MdGraphicEq} />
-      </RangeSliderThumb>
-    </RangeSlider>
-  )
-}
   
-const currentYear = new Date().getFullYear();
-
   const Buchsuchen = () => {
     const toast = useToast();
     const [titelValue, setTitelValue] = useState('');
     const [isbnValue, setIsbnValue] = useState('');
     const [searchClicked, setSearchClicked] = useState(false);
-  
+    const [ratingValue, setRatingValue] = useState<number | null>(null); // Neue State-Variable für das Rating
+    const [druckausgabeChecked, setDruckausgabeChecked] = useState(false);
+    const [kindleChecked, setKindleChecked] = useState(false);
+    const [buchArtChecked, setBuchArtChecked] = useState(false);
+    const [lieferbarValue, setLieferbarValue] = useState<string>(''); // Neue State-Variable für Lieferbar
+
     interface Book {
       isbn: string;
       rating: number;
@@ -188,35 +66,54 @@ const currentYear = new Date().getFullYear();
     }
     const [fetchedData, setFetchedData] = useState<FetchedData>({ _embedded: { buecher: [] } });
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const fetchDataFromApi = async () => {
-      try {
-        let apiUrl = 'https://localhost:3000/rest?';
     
-        if (titelValue.trim() !== '') {
-          apiUrl += `titel=${titelValue}`;
-        }
-    
-        if (isbnValue.trim() !== '') {
-          apiUrl += `&isbn=${isbnValue}`;
-        }
-    
-        const response = await axios.get(apiUrl);
-        console.log('Response data:', response.data);
-    
-        if (response.data._embedded.buecher.length === 0) {
-          return 404;
-        }
-    
-        setFetchedData(response.data);
-        return 200;
-      } catch (error) {
-        console.error('Fehler beim Abrufen der Daten:', error);
-        return 500;
-      }
-    };
     
     useEffect(() => {
+      const fetchDataFromApi = async () => {
+        try {
+          let apiUrl = 'https://localhost:3000/rest?';
+      
+          if (titelValue.trim() !== '') {
+            apiUrl += `titel=${titelValue}`;
+          }
+      
+          if (isbnValue.trim() !== '') {
+            apiUrl += `&isbn=${isbnValue}`;
+          }
+  
+          if (ratingValue !== null) {
+            apiUrl += `&rating=${ratingValue}`;
+          }
+  
+          if (druckausgabeChecked == true && kindleChecked == false) {
+              apiUrl += `&art=DRUCKAUSGABE`;
+              setBuchArtChecked(true);
+          }
+  
+          else if(kindleChecked == true && druckausgabeChecked == false) {
+              apiUrl += `&art=KINDLE`;
+              setBuchArtChecked(true);
+          }
+          
+          if (lieferbarValue !== '') {
+            apiUrl += `&lieferbar=${lieferbarValue === 'Ja' ? 'true' : 'false'}`;
+          }
+      
+          const response = await axios.get(apiUrl);
+          console.log('Response data:', response.data);
+      
+          if (response.data._embedded.buecher.length === 0) {
+            return 404;
+          }
+      
+          setFetchedData(response.data);
+          return 200;
+        } catch (error) {
+          console.error('Fehler beim Abrufen der Daten:', error);
+          return 500;
+        }
+      };
+
       if (searchClicked) {
         (async () => {
           const status = await fetchDataFromApi();
@@ -250,9 +147,9 @@ const currentYear = new Date().getFullYear();
           setSearchClicked(false);
         })();
       }
-    }, [fetchDataFromApi, searchClicked, toast]);
+    }, [searchClicked, toast, titelValue, isbnValue, ratingValue, druckausgabeChecked, kindleChecked, lieferbarValue]);
     
-    return (
+      return (
       <div style = {{
         backgroundColor: "white",
       }}>
@@ -266,10 +163,10 @@ const currentYear = new Date().getFullYear();
             </Thead>
             <Tbody>
             <Tr>
-  <Td>Titel</Td>
-  <Td>
-    <Box mb={4} maxW="300px">
-      <FormControl>
+          <Td>Titel</Td>
+          <Td>
+           <Box mb={4} maxW="300px">
+           <FormControl>
           <Input
               value={titelValue}
               onChange={(event) => setTitelValue(event.target.value)}
@@ -297,87 +194,79 @@ const currentYear = new Date().getFullYear();
                <Td>Rating</Td>
                 <Td>
                 <Box maxW="300px">
-                  <RangeSliderMarkRating/>
-                  </Box>
+        <Menu>
+          <MenuButton as={Button}>
+            {ratingValue !== null ? ratingValue : 'Choose'}
+          </MenuButton>
+          <MenuList>
+            {[1, 2, 3, 4, 5].map((value) => (
+              <MenuItem
+                key={value}
+                onClick={() => setRatingValue(value)}
+              >
+                {value}
+              </MenuItem>
+            ))}
+          </MenuList>
+        </Menu>
+      </Box>
                </Td>
               </Tr>
 
               <Tr>
                 <Td>Buchart</Td>
                 <Td>
-                  <Box mb={4}>
-                  <RadioGroup>
-                      <Stack direction="row">
-                        <Radio value="1">Druckausgabe</Radio>
-                        <Radio value="2">Kindle</Radio>
-                      </Stack>
-                    </RadioGroup>
-                  </Box>
-                </Td>
-              </Tr>
-              <Tr>
-                <Td>Preis</Td>
-                <Td>
-                  <Box maxW="300px">
-                    <RangeSliderPreis/>
-                  </Box>
-                </Td>
-              </Tr>
-              <Tr>
-                <Td>Rabatt</Td>
-                <Td>
-                  <Box maxW="300px">
-                    <RangeSliderRabatt/>
-                  </Box>
+                <Box mb={4}>
+            <Stack spacing={5} direction="row">
+              {/* Checkbox für Druckausgabe 1 */}
+              <Checkbox
+                colorScheme="blue"
+                defaultChecked={druckausgabeChecked}
+                onChange={(e) => setDruckausgabeChecked(e.target.checked)}
+              >
+                Druckausgabe
+              </Checkbox>
+
+              {/* Checkbox für Druckausgabe 2 */}
+              <Checkbox
+                colorScheme="blue"
+                defaultChecked={kindleChecked}
+                onChange={(e) => setKindleChecked(e.target.checked)}
+              >
+                Kindle
+              </Checkbox>
+            </Stack>
+          </Box>
                 </Td>
               </Tr>
               <Tr>
                 <Td>Lieferbar</Td>
                 <Td>
-                  <FormControl display="flex" alignItems="center">
-                    <FormLabel mb="0"></FormLabel>
-                    <Switch 
-                      id="lieferbar"
-                      />
-                  </FormControl>
-                </Td>
+    <RadioGroup
+      value={lieferbarValue}
+      onChange={(value) => setLieferbarValue(value as string)}
+    >
+      <Stack spacing={5} direction='row'>
+        <Radio colorScheme='blue' value='Ja'>
+          Ja
+        </Radio>
+        <Radio colorScheme='blue' value='Nein'>
+          Nein
+        </Radio>
+      </Stack>
+    </RadioGroup>
+  </Td>
               </Tr>
-              <Tr>
-                <Td>Erscheinungsjahr</Td>
-                <Td>
-                  <Box maxW="300px">
-                    <NumberInput
-                      defaultValue={currentYear}
-                      min={1800}
-                      max={currentYear}
-                    >
-                      <NumberInputField />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
-                    </NumberInput>
-                  </Box>
-                </Td>
-              </Tr>
-              <Tr>
-                <Td>Homepage</Td>
-                <Td>
-                  <Box maxW="300px">
-                    <FormControl>
-                      <Input />
-                    </FormControl>
-                  </Box>
-                </Td>
-              </Tr>
+              <Box mb={4}>
+              </Box>
             </Tbody>
-          </Table>
+          </Table>   
         </TableContainer>
       
     <Box display="flex" justifyContent="center" alignItems="center" marginBottom="4">
     <Button 
   onClick={() => {
-    if (titelValue.trim() !== '' || isbnValue.trim() !== '') {
+    if (titelValue.trim() !== '' || isbnValue.trim() !== '' || ratingValue !== null || buchArtChecked == true || lieferbarValue !== null) {
       setSearchClicked(true);
     } else {
       // Benutzer über leeres Suchfeld informieren
@@ -417,7 +306,7 @@ const currentYear = new Date().getFullYear();
               <Tr key={index}>
                 <Td>{buch.titel.titel}</Td>
                 <Td>{buch.isbn}</Td>
-                <Td>{buch.rating}/10</Td>
+                <Td>{buch.rating}/5</Td>
                 <Td>{buch.art}</Td>
                 <Td>{buch.preis}€</Td>
                 <Td>{(buch.rabatt * 100).toFixed(2)}%</Td>
@@ -433,5 +322,6 @@ const currentYear = new Date().getFullYear();
       </TableContainer>
     </div>
     );
+  }
   }
 export default Buchsuchen;
