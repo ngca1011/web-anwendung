@@ -323,5 +323,4 @@ import {
     </div>
     );
   }
-  }
 export default Buchsuchen;
