@@ -35,7 +35,9 @@ import {
     const toast = useToast();
   
       return (
-      <div>
+      <div style = {{
+        backgroundColor: "white",
+      }}>
         <TableContainer>
           <Table variant="simple">
             <Thead>

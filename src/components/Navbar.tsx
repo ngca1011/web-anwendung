@@ -1,13 +1,21 @@
-import { Box, Flex, Text, Link, Spacer } from '@chakra-ui/react';
+import { Box, Flex, Icon, Link, Spacer } from '@chakra-ui/react';
+import { MdPerson } from "react-icons/md";
+import {useAuthContext} from "../Auth.tsx";
 
 const Navigation = () => {
+
+  const {isLoggedIn} = useAuthContext();
+
   return (
     <Flex
       p={4}
       align="center"
       justify="space-between"
-      bg="gray.400"
+      bg="#B38B6D"
       color="white"
+      style = {{
+        backgroundImage: 'url("../../public/NavBar.png")',
+      }}
     >
       <Box>
         <Link href="/" fontSize="xl" fontWeight="bold">
@@ -18,19 +26,25 @@ const Navigation = () => {
       <Spacer />
 
       <Flex>
-            <Link href="/buchsuchen" mr={4}>
+            <Link href="/buchsuchen" mr={4} fontWeight="bold">
                 BuchSuchen
             </Link>
-            <Link href="/buchanlegen" mr={4}> 
-            BuchAnlegen
+            <Link href="/buchanlegen" mr={4} fontWeight="bold"> 
+                BuchAnlegen
             </Link>
       </Flex>
-
-        <Spacer />
-
-        <Link href="/anmelden">
-            Login
+        <Spacer/>
+        {isLoggedIn ? (
+        <Box>
+          <Link href="/anmelden">
+            <Icon as={MdPerson} />
+          </Link>
+        </Box>
+        ) : (
+        <Link href="/anmelden" fontWeight="bold">
+          Login
         </Link>
+        )}
     </Flex>
   );
 };
