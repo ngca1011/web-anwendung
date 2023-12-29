@@ -4,6 +4,7 @@ import Buchsuchen  from './pages/BuchSuchenPage.tsx'
 import Buchanlegen from './pages/BuchCreatePage.tsx'
 import Login from './pages/LoginPage.tsx'
 import { AuthProvider } from './Auth.tsx'
+import BuchZeigen from './pages/BuchZeigen.tsx'
 
 function App() {
   let Component: React.ComponentType = Home;
@@ -14,6 +15,9 @@ function App() {
       break
     case "/buchsuchen":
       Component = Buchsuchen
+      break
+    case "/buchzeigen":
+      Component = BuchZeigen
       break 
     case "/buchanlegen":
       Component = Buchanlegen
