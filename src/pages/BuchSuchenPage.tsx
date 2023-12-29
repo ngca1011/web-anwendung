@@ -5,8 +5,7 @@ import {
     FormHelperText,
     Input,
     RangeSlider,
-    Radio,
-    RadioGroup,
+    Checkbox,
     Stack,
     Switch,
     FormControl,
@@ -44,7 +43,10 @@ import {
     const [isbnValue, setIsbnValue] = useState('');
     const [searchClicked, setSearchClicked] = useState(false);
     const [ratingValue, setRatingValue] = useState<number | null>(null); // Neue State-Variable für das Rating
-
+    const [druckausgabeChecked, setDruckausgabeChecked] = useState(false);
+    const [kindleChecked, setKindleChecked] = useState(false);
+    const [buchArtChecked, setBuchArtChecked] = useState(false);
+    
 
     interface Book {
       isbn: string;
@@ -89,6 +91,16 @@ import {
 
         if (ratingValue !== null) {
           apiUrl += `&rating=${ratingValue}`;
+        }
+
+        if (druckausgabeChecked == true && kindleChecked == false) {
+            apiUrl += `&art=DRUCKAUSGABE`;
+            setBuchArtChecked(true);
+        }
+
+        else if(kindleChecked == true && druckausgabeChecked == false) {
+            apiUrl += `&art=KINDLE`;
+            setBuchArtChecked(true);
         }
     
         const response = await axios.get(apiUrl);
@@ -209,14 +221,27 @@ import {
               <Tr>
                 <Td>Buchart</Td>
                 <Td>
-                  <Box mb={4}>
-                  <RadioGroup>
-                      <Stack direction="row">
-                        <Radio value="1">Druckausgabe</Radio>
-                        <Radio value="2">Kindle</Radio>
-                      </Stack>
-                    </RadioGroup>
-                  </Box>
+                <Box mb={4}>
+            <Stack spacing={5} direction="row">
+              {/* Checkbox für Druckausgabe 1 */}
+              <Checkbox
+                colorScheme="blue"
+                defaultChecked={druckausgabeChecked}
+                onChange={(e) => setDruckausgabeChecked(e.target.checked)}
+              >
+                Druckausgabe
+              </Checkbox>
+
+              {/* Checkbox für Druckausgabe 2 */}
+              <Checkbox
+                colorScheme="blue"
+                defaultChecked={kindleChecked}
+                onChange={(e) => setKindleChecked(e.target.checked)}
+              >
+                Kindle
+              </Checkbox>
+            </Stack>
+          </Box>
                 </Td>
               </Tr>
               <Tr>
@@ -299,7 +324,7 @@ import {
     <Box display="flex" justifyContent="center" alignItems="center" marginBottom="4">
     <Button 
   onClick={() => {
-    if (titelValue.trim() !== '' || isbnValue.trim() !== '' || ratingValue !== null) {
+    if (titelValue.trim() !== '' || isbnValue.trim() !== '' || ratingValue !== null || buchArtChecked == true) {
       setSearchClicked(true);
     } else {
       // Benutzer über leeres Suchfeld informieren
