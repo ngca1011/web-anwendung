@@ -1,5 +1,5 @@
 import { Box, Button, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 
 const ButtonClick = () => {
   interface Book {
@@ -37,29 +37,6 @@ const ButtonClick = () => {
     const fetchedData = await response.json();
     setFetchedData(fetchedData);
   }
-  
-  /* const fetchData = () => {
-    fetch("https://localhost:3000/rest/", {mode: "no-cors"})
-      .then((response) => response.json())
-      .then((data) => { 
-        console.log(data);
-        setFetchedData(data);
-      })
-  } */
-
-  /* const fetchData = () => {
-    fetch("https://localhost:3000/rest"/* , {mode: "no-cors"} )*/
-      /* .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
-        setFetchedData(data.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  } */
     
     return (
       <div>
