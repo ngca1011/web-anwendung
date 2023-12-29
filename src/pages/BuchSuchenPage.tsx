@@ -39,7 +39,7 @@ import {
     const [titelValue, setTitelValue] = useState('');
     const [isbnValue, setIsbnValue] = useState('');
     const [searchClicked, setSearchClicked] = useState(false);
-
+  
     interface Book {
       isbn: string;
       rating: number;
@@ -69,33 +69,69 @@ import {
     }
     const [fetchedData, setFetchedData] = useState<FetchedData>({ _embedded: { buecher: [] } });
 
-    useEffect(() => {
-      const getData = async () => {
-        try {
-          let apiUrl = 'https://localhost:3000/rest?';
+    const fetchDataFromApi = async () => {
+      try {
+        let apiUrl = 'https://localhost:3000/rest?';
     
-          if (titelValue.trim() !== '') {
-            apiUrl += `titel=${titelValue}`;
-          }
-    
-          if (isbnValue.trim() !== '') {
-            apiUrl += `&isbn=${isbnValue}`;
-          }
-    
-          const response = await axios.get(apiUrl);
-          setFetchedData(response.data);
-        } catch (error) {
-          console.error('Fehler beim Abrufen der Daten:', error);
+        if (titelValue.trim() !== '') {
+          apiUrl += `titel=${titelValue}`;
         }
-      };
     
-      if (searchClicked) {
-        getData();
-        setSearchClicked(false);
+        if (isbnValue.trim() !== '') {
+          apiUrl += `&isbn=${isbnValue}`;
+        }
+    
+        const response = await axios.get(apiUrl);
+        console.log('Response data:', response.data);
+    
+        if (response.data._embedded.buecher.length === 0) {
+          return 404;
+        }
+    
+        setFetchedData(response.data);
+        return 200;
+      } catch (error) {
+        console.error('Fehler beim Abrufen der Daten:', error);
+        return 500;
       }
-    }, [titelValue, isbnValue, searchClicked]);
+    };
     
-
+    useEffect(() => {
+      if (searchClicked) {
+        (async () => {
+          const status = await fetchDataFromApi();
+    
+          if (status === 200) {
+            toast({
+              title: 'Erfolgreich',
+              description: 'Buch gefunden',
+              status: 'success',
+              duration: 3000,
+              isClosable: true,
+            });
+          } else if (status === 404) {
+            toast({
+              title: 'Info',
+              description: 'Kein Buch gefunden',
+              status: 'info',
+              duration: 3000,
+              isClosable: true,
+            });
+          } else {
+            toast({
+              title: 'Fehler',
+              description: 'Suche konnte nicht durchgeführt werden',
+              status: 'error',
+              duration: 3000,
+              isClosable: true,
+            });
+          }
+    
+          setSearchClicked(false);
+        })();
+      }
+    }, [searchClicked]);
+    
       return (
       <div style = {{
         backgroundColor: "white",
@@ -138,22 +174,20 @@ import {
                 </Td>
               </Tr>
               <Tr>
-                <Td>Rating</Td>
+               <Td>Rating</Td>
                 <Td>
-                  <Box mb={4} maxW="300px">
-                    <RangeSlider
-                      aria-label={["min", "max"]}
-                      defaultValue={[0, 10]}
-                    >
-                      <RangeSliderTrack>
-                        <RangeSliderFilledTrack />
+                <Box maxW="300px">
+                  <RangeSlider aria-label={["min", "max"]} defaultValue={[0, 10]}>
+                    <RangeSliderTrack>
+                      <RangeSliderFilledTrack />
                       </RangeSliderTrack>
                       <RangeSliderThumb index={0} />
                       <RangeSliderThumb index={1} />
                     </RangeSlider>
                   </Box>
-                </Td>
+               </Td>
               </Tr>
+
               <Tr>
                 <Td>Buchart</Td>
                 <Td>
@@ -248,33 +282,12 @@ import {
     <Button 
   onClick={() => {
     if (titelValue.trim() !== '' || isbnValue.trim() !== '') {
-      setSearchClicked(true); // Markiere die Suche als geklickt
-      const examplePromise = new Promise((resolve) => {
-        // Führe die asynchrone Logik hier aus
-        const fetchData = async () => {
-          try {
-            const response = await axios.get(`https://localhost:3000/rest?titel=${titelValue}&isbn=${isbnValue}`);
-            setFetchedData(response.data);
-            resolve(200);
-          } catch (error) {
-            console.error('Fehler beim Abrufen der Daten:', error);
-            resolve(500);
-          }
-        };
-
-        fetchData();
-      });
-
-      toast.promise(examplePromise, {
-        success: { title: 'Erfolgreich', description: 'Buch gefunden' },
-        error: { title: 'Fehler', description: 'Suche konnte nicht durchgeführt werden' },
-        loading: { title: 'Bitte warten', description: 'Vorgang wird ausgeführt' },
-      });
+      setSearchClicked(true);
     } else {
       // Benutzer über leeres Suchfeld informieren
       toast({
         title: 'Achtung',
-        description: 'Bitte geben Sie einen Titel für die Suche ein.',
+        description: 'Bitte geben Sie einen Titel oder eine ISBN für die Suche ein.',
         status: 'warning',
         duration: 3000,
         isClosable: true,
