@@ -66,52 +66,54 @@ import {
     }
     const [fetchedData, setFetchedData] = useState<FetchedData>({ _embedded: { buecher: [] } });
 
-    const fetchDataFromApi = async () => {
-      try {
-        let apiUrl = 'https://localhost:3000/rest?';
     
-        if (titelValue.trim() !== '') {
-          apiUrl += `titel=${titelValue}`;
-        }
-    
-        if (isbnValue.trim() !== '') {
-          apiUrl += `&isbn=${isbnValue}`;
-        }
-
-        if (ratingValue !== null) {
-          apiUrl += `&rating=${ratingValue}`;
-        }
-
-        if (druckausgabeChecked == true && kindleChecked == false) {
-            apiUrl += `&art=DRUCKAUSGABE`;
-            setBuchArtChecked(true);
-        }
-
-        else if(kindleChecked == true && druckausgabeChecked == false) {
-            apiUrl += `&art=KINDLE`;
-            setBuchArtChecked(true);
-        }
-        
-        if (lieferbarValue !== '') {
-          apiUrl += `&lieferbar=${lieferbarValue === 'Ja' ? 'true' : 'false'}`;
-        }
-    
-        const response = await axios.get(apiUrl);
-        console.log('Response data:', response.data);
-    
-        if (response.data._embedded.buecher.length === 0) {
-          return 404;
-        }
-    
-        setFetchedData(response.data);
-        return 200;
-      } catch (error) {
-        console.error('Fehler beim Abrufen der Daten:', error);
-        return 500;
-      }
-    };
     
     useEffect(() => {
+      const fetchDataFromApi = async () => {
+        try {
+          let apiUrl = 'https://localhost:3000/rest?';
+      
+          if (titelValue.trim() !== '') {
+            apiUrl += `titel=${titelValue}`;
+          }
+      
+          if (isbnValue.trim() !== '') {
+            apiUrl += `&isbn=${isbnValue}`;
+          }
+  
+          if (ratingValue !== null) {
+            apiUrl += `&rating=${ratingValue}`;
+          }
+  
+          if (druckausgabeChecked == true && kindleChecked == false) {
+              apiUrl += `&art=DRUCKAUSGABE`;
+              setBuchArtChecked(true);
+          }
+  
+          else if(kindleChecked == true && druckausgabeChecked == false) {
+              apiUrl += `&art=KINDLE`;
+              setBuchArtChecked(true);
+          }
+          
+          if (lieferbarValue !== '') {
+            apiUrl += `&lieferbar=${lieferbarValue === 'Ja' ? 'true' : 'false'}`;
+          }
+      
+          const response = await axios.get(apiUrl);
+          console.log('Response data:', response.data);
+      
+          if (response.data._embedded.buecher.length === 0) {
+            return 404;
+          }
+      
+          setFetchedData(response.data);
+          return 200;
+        } catch (error) {
+          console.error('Fehler beim Abrufen der Daten:', error);
+          return 500;
+        }
+      };
+
       if (searchClicked) {
         (async () => {
           const status = await fetchDataFromApi();
@@ -145,7 +147,7 @@ import {
           setSearchClicked(false);
         })();
       }
-    }, [searchClicked]);
+    }, [searchClicked, toast, titelValue, isbnValue, ratingValue, druckausgabeChecked, kindleChecked, lieferbarValue]);
     
       return (
       <div style = {{
