@@ -16,6 +16,10 @@ import {
     Table,
     Thead,
     Tbody,
+    Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
     Tr,
     Th,
     Td,
@@ -39,7 +43,9 @@ import {
     const [titelValue, setTitelValue] = useState('');
     const [isbnValue, setIsbnValue] = useState('');
     const [searchClicked, setSearchClicked] = useState(false);
-  
+    const [ratingValue, setRatingValue] = useState<number | null>(null); // Neue State-Variable für das Rating
+
+
     interface Book {
       isbn: string;
       rating: number;
@@ -79,6 +85,10 @@ import {
     
         if (isbnValue.trim() !== '') {
           apiUrl += `&isbn=${isbnValue}`;
+        }
+
+        if (ratingValue !== null) {
+          apiUrl += `&rating=${ratingValue}`;
         }
     
         const response = await axios.get(apiUrl);
@@ -146,10 +156,10 @@ import {
             </Thead>
             <Tbody>
             <Tr>
-  <Td>Titel</Td>
-  <Td>
-    <Box mb={4} maxW="300px">
-      <FormControl>
+          <Td>Titel</Td>
+          <Td>
+           <Box mb={4} maxW="300px">
+           <FormControl>
           <Input
               value={titelValue}
               onChange={(event) => setTitelValue(event.target.value)}
@@ -177,14 +187,22 @@ import {
                <Td>Rating</Td>
                 <Td>
                 <Box maxW="300px">
-                  <RangeSlider aria-label={["min", "max"]} defaultValue={[0, 10]}>
-                    <RangeSliderTrack>
-                      <RangeSliderFilledTrack />
-                      </RangeSliderTrack>
-                      <RangeSliderThumb index={0} />
-                      <RangeSliderThumb index={1} />
-                    </RangeSlider>
-                  </Box>
+        <Menu>
+          <MenuButton as={Button}>
+            {ratingValue !== null ? ratingValue : 'Choose'}
+          </MenuButton>
+          <MenuList>
+            {[1, 2, 3, 4, 5].map((value) => (
+              <MenuItem
+                key={value}
+                onClick={() => setRatingValue(value)}
+              >
+                {value}
+              </MenuItem>
+            ))}
+          </MenuList>
+        </Menu>
+      </Box>
                </Td>
               </Tr>
 
@@ -281,7 +299,7 @@ import {
     <Box display="flex" justifyContent="center" alignItems="center" marginBottom="4">
     <Button 
   onClick={() => {
-    if (titelValue.trim() !== '' || isbnValue.trim() !== '') {
+    if (titelValue.trim() !== '' || isbnValue.trim() !== '' || ratingValue !== null) {
       setSearchClicked(true);
     } else {
       // Benutzer über leeres Suchfeld informieren
@@ -321,7 +339,7 @@ import {
               <Tr key={index}>
                 <Td>{buch.titel.titel}</Td>
                 <Td>{buch.isbn}</Td>
-                <Td>{buch.rating}/10</Td>
+                <Td>{buch.rating}/5</Td>
                 <Td>{buch.art}</Td>
                 <Td>{buch.preis}€</Td>
                 <Td>{(buch.rabatt * 100).toFixed(2)}%</Td>
