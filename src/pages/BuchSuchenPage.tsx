@@ -4,15 +4,12 @@ import axios from 'axios';
 import {
     FormHelperText,
     Input,
-    RangeSlider,
     Checkbox,
     Stack,
-    Switch,
-    FormControl,
-    FormLabel,
-    RangeSliderTrack,
-    NumberInput,
+    RadioGroup,
     Table,
+    FormControl,
+    Radio,
     Thead,
     Tbody,
     Menu,
@@ -24,19 +21,11 @@ import {
     Td,
     TableCaption,
     TableContainer,
-    NumberInputField,
-    NumberInputStepper,
-    NumberIncrementStepper,
     Button,
-    NumberDecrementStepper,
     Box,
-    RangeSliderFilledTrack,
-    RangeSliderThumb,
     useToast
   } from "@chakra-ui/react";
   
-  const currentYear = new Date().getFullYear();
-
   const Buchsuchen = () => {
     const toast = useToast();
     const [titelValue, setTitelValue] = useState('');
@@ -46,7 +35,7 @@ import {
     const [druckausgabeChecked, setDruckausgabeChecked] = useState(false);
     const [kindleChecked, setKindleChecked] = useState(false);
     const [buchArtChecked, setBuchArtChecked] = useState(false);
-    
+    const [lieferbarValue, setLieferbarValue] = useState<string>(''); // Neue State-Variable für Lieferbar
 
     interface Book {
       isbn: string;
@@ -101,6 +90,10 @@ import {
         else if(kindleChecked == true && druckausgabeChecked == false) {
             apiUrl += `&art=KINDLE`;
             setBuchArtChecked(true);
+        }
+        
+        if (lieferbarValue !== '') {
+          apiUrl += `&lieferbar=${lieferbarValue === 'Ja' ? 'true' : 'false'}`;
         }
     
         const response = await axios.get(apiUrl);
@@ -245,86 +238,33 @@ import {
                 </Td>
               </Tr>
               <Tr>
-                <Td>Preis</Td>
-                <Td>
-                  <Box maxW="300px">
-                    <RangeSlider
-                      aria-label={["min", "max"]}
-                      defaultValue={[0, 10]}
-                    >
-                      <RangeSliderTrack>
-                        <RangeSliderFilledTrack />
-                      </RangeSliderTrack>
-                      <RangeSliderThumb index={0} />
-                      <RangeSliderThumb index={1} />
-                    </RangeSlider>
-                  </Box>
-                </Td>
-              </Tr>
-              <Tr>
-                <Td>Rabatt</Td>
-                <Td>
-                  <Box maxW="300px">
-                    <RangeSlider
-                      aria-label={["min", "max"]}
-                      defaultValue={[0, 10]}
-                    >
-                      <RangeSliderTrack>
-                        <RangeSliderFilledTrack />
-                      </RangeSliderTrack>
-                      <RangeSliderThumb index={0} />
-                      <RangeSliderThumb index={1} />
-                    </RangeSlider>
-                  </Box>
-                </Td>
-              </Tr>
-              <Tr>
                 <Td>Lieferbar</Td>
                 <Td>
-                  <FormControl display="flex" alignItems="center">
-                    <FormLabel mb="0"></FormLabel>
-                    <Switch 
-                      id="lieferbar"
-                      />
-                  </FormControl>
-                </Td>
+    <RadioGroup
+      value={lieferbarValue}
+      onChange={(value) => setLieferbarValue(value as string)}
+    >
+      <Stack spacing={5} direction='row'>
+        <Radio colorScheme='blue' value='Ja'>
+          Ja
+        </Radio>
+        <Radio colorScheme='blue' value='Nein'>
+          Nein
+        </Radio>
+      </Stack>
+    </RadioGroup>
+  </Td>
               </Tr>
-              <Tr>
-                <Td>Erscheinungsjahr</Td>
-                <Td>
-                  <Box maxW="300px">
-                    <NumberInput
-                      defaultValue={currentYear}
-                      min={1800}
-                      max={currentYear}
-                    >
-                      <NumberInputField />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
-                    </NumberInput>
-                  </Box>
-                </Td>
-              </Tr>
-              <Tr>
-                <Td>Homepage</Td>
-                <Td>
-                  <Box maxW="300px">
-                    <FormControl>
-                      <Input />
-                    </FormControl>
-                  </Box>
-                </Td>
-              </Tr>
+              <Box mb={4}>
+              </Box>
             </Tbody>
-          </Table>
+          </Table>   
         </TableContainer>
       
     <Box display="flex" justifyContent="center" alignItems="center" marginBottom="4">
     <Button 
   onClick={() => {
-    if (titelValue.trim() !== '' || isbnValue.trim() !== '' || ratingValue !== null || buchArtChecked == true) {
+    if (titelValue.trim() !== '' || isbnValue.trim() !== '' || ratingValue !== null || buchArtChecked == true || lieferbarValue !== null) {
       setSearchClicked(true);
     } else {
       // Benutzer über leeres Suchfeld informieren
