@@ -26,15 +26,233 @@ import {
     Box,
     RangeSliderFilledTrack,
     RangeSliderThumb,
-    useToast
+    useToast,
+    RangeSliderMark,
   } from "@chakra-ui/react";
+import {useState, useEffect} from "react"; 
+import axios from "axios";
+import { MdGraphicEq } from "react-icons/md";
+
+function RangeSliderMarkRating() {
+  const [sliderValue, setSliderValue] = useState([0, 5])
+  return (
+    <RangeSlider aria-label={['min', 'max']} defaultValue={[0, 5]} 
+          min={0} max={10} onChange={(val) => setSliderValue(val)}>
+      <RangeSliderMark value={5} mt='1' ml='-2,5' fontSize='sm'>
+        5
+      </RangeSliderMark>
+      <RangeSliderMark
+        value={sliderValue[1]}
+        textAlign='center'
+        bg='blue'
+        color='white'
+        mt='-7'
+        ml='-1.5'
+        width='6'
+        height='6'
+        border-radius='50%'
+      >{sliderValue[1]}
+      </RangeSliderMark>
+      <RangeSliderTrack>
+        <RangeSliderFilledTrack/>
+      </RangeSliderTrack>
+      <RangeSliderThumb boxSize={3} index={1}>
+        <Box color='tomato' as={MdGraphicEq} />
+      </RangeSliderThumb>
+    </RangeSlider>
+  )
+}
+
+function RangeSliderPreis() {
+  const [sliderValue, setSliderValue] = useState([10, 50])
+  return (
+    <RangeSlider aria-label={['min', 'max']} defaultValue={[10, 50]} 
+          min={0} max={100} onChange={(val) => setSliderValue(val)}>
+      <RangeSliderMark value={50} mt='1' ml='-2,5' fontSize='sm'>
+        50
+      </RangeSliderMark>
+      <RangeSliderMark value={10} mt='1' ml='-2.5' fontSize='sm'>
+        10
+      </RangeSliderMark>
+      <RangeSliderMark
+        value={sliderValue[0]}
+        textAlign='center'
+        bg='blue'
+        color='white'
+        mt='-7'
+        ml='-1.5'
+        w='8'
+      >{sliderValue[0]}€
+      </RangeSliderMark>
+      <RangeSliderMark
+        value={sliderValue[1]}
+        textAlign='center'
+        bg='blue'
+        color='white'
+        mt='-7'
+        ml='-1.5'
+        width='8'
+      >{sliderValue[1]}€
+      </RangeSliderMark>
+      <RangeSliderTrack>
+        <RangeSliderFilledTrack/>
+      </RangeSliderTrack>
+      <RangeSliderThumb boxSize={4} index={0}>
+        <Box color='tomato' as={MdGraphicEq} />
+      </RangeSliderThumb>
+      <RangeSliderThumb boxSize={3} index={1}>
+        <Box color='tomato' as={MdGraphicEq} />
+      </RangeSliderThumb>
+    </RangeSlider>
+  )
+}
+
+function RangeSliderRabatt() {
+  const [sliderValue, setSliderValue] = useState([25, 75])
+  return (
+    <RangeSlider aria-label={['min', 'max']} defaultValue={[25, 75]} 
+          min={0} max={100} onChange={(val) => setSliderValue(val)}>
+      <RangeSliderMark value={75} mt='1' ml='-2,5' fontSize='sm'>
+        75
+      </RangeSliderMark>
+      <RangeSliderMark value={25} mt='1' ml='-2.5' fontSize='sm'>
+        25
+      </RangeSliderMark>
+      <RangeSliderMark
+        value={sliderValue[0]}
+        textAlign='center'
+        bg='blue'
+        color='white'
+        mt='-7'
+        ml='-1.5'
+        w='8'
+      >{sliderValue[0]}%
+      </RangeSliderMark>
+      <RangeSliderMark
+        value={sliderValue[1]}
+        textAlign='center'
+        bg='blue'
+        color='white'
+        mt='-7'
+        ml='-1.5'
+        width='8'
+      >{sliderValue[1]}%
+      </RangeSliderMark>
+      <RangeSliderTrack>
+        <RangeSliderFilledTrack/>
+      </RangeSliderTrack>
+      <RangeSliderThumb boxSize={4} index={0}>
+        <Box color='tomato' as={MdGraphicEq} />
+      </RangeSliderThumb>
+      <RangeSliderThumb boxSize={3} index={1}>
+        <Box color='tomato' as={MdGraphicEq} />
+      </RangeSliderThumb>
+    </RangeSlider>
+  )
+}
   
-  const currentYear = new Date().getFullYear();
+const currentYear = new Date().getFullYear();
 
   const Buchsuchen = () => {
     const toast = useToast();
+    const [titelValue, setTitelValue] = useState('');
+    const [isbnValue, setIsbnValue] = useState('');
+    const [searchClicked, setSearchClicked] = useState(false);
   
-      return (
+    interface Book {
+      isbn: string;
+      rating: number;
+      art: string;
+      preis: number;
+      rabatt: number;
+      lieferbar: boolean;
+      datum: string;
+      homepage: string;
+      schlagwoerter: string[];
+      titel: {
+        titel: string;
+        untertitel: string;
+      };
+      _links: {
+        self: {
+          href: string;
+        };
+      };
+    }
+    interface Embedded {
+      buecher: Book[];
+    }
+
+    interface FetchedData {
+      _embedded: Embedded;
+    }
+    const [fetchedData, setFetchedData] = useState<FetchedData>({ _embedded: { buecher: [] } });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const fetchDataFromApi = async () => {
+      try {
+        let apiUrl = 'https://localhost:3000/rest?';
+    
+        if (titelValue.trim() !== '') {
+          apiUrl += `titel=${titelValue}`;
+        }
+    
+        if (isbnValue.trim() !== '') {
+          apiUrl += `&isbn=${isbnValue}`;
+        }
+    
+        const response = await axios.get(apiUrl);
+        console.log('Response data:', response.data);
+    
+        if (response.data._embedded.buecher.length === 0) {
+          return 404;
+        }
+    
+        setFetchedData(response.data);
+        return 200;
+      } catch (error) {
+        console.error('Fehler beim Abrufen der Daten:', error);
+        return 500;
+      }
+    };
+    
+    useEffect(() => {
+      if (searchClicked) {
+        (async () => {
+          const status = await fetchDataFromApi();
+    
+          if (status === 200) {
+            toast({
+              title: 'Erfolgreich',
+              description: 'Buch gefunden',
+              status: 'success',
+              duration: 3000,
+              isClosable: true,
+            });
+          } else if (status === 404) {
+            toast({
+              title: 'Info',
+              description: 'Kein Buch gefunden',
+              status: 'info',
+              duration: 3000,
+              isClosable: true,
+            });
+          } else {
+            toast({
+              title: 'Fehler',
+              description: 'Suche konnte nicht durchgeführt werden',
+              status: 'error',
+              duration: 3000,
+              isClosable: true,
+            });
+          }
+    
+          setSearchClicked(false);
+        })();
+      }
+    }, [fetchDataFromApi, searchClicked, toast]);
+    
+    return (
       <div style = {{
         backgroundColor: "white",
       }}>
@@ -47,49 +265,48 @@ import {
               </Tr>
             </Thead>
             <Tbody>
-              <Tr>
-                <Td>Titel</Td>
-                <Td>
-                  <Box mb={4} maxW="300px">
-                    <FormControl>
-                      <Input />
-                    </FormControl>
-                  </Box>
-                </Td>
+            <Tr>
+  <Td>Titel</Td>
+  <Td>
+    <Box mb={4} maxW="300px">
+      <FormControl>
+          <Input
+              value={titelValue}
+              onChange={(event) => setTitelValue(event.target.value)}
+              placeholder="Titel eingeben"
+              />
+              </FormControl>
+              </Box>
+              </Td>
               </Tr>
               <Tr>
                 <Td>ISBN Number</Td>
                 <Td>
                   <Box mb={4} maxW="300px">
                     <FormControl>
-                      <Input />
+                    <Input
+                    value={isbnValue}
+                    onChange={(event) => setIsbnValue(event.target.value)}
+                    />
                       <FormHelperText>Example: "9780131969452"</FormHelperText>
                     </FormControl>
                   </Box>
                 </Td>
               </Tr>
               <Tr>
-                <Td>Rating</Td>
+               <Td>Rating</Td>
                 <Td>
-                  <Box mb={4} maxW="300px">
-                    <RangeSlider
-                      aria-label={["min", "max"]}
-                      defaultValue={[0, 10]}
-                    >
-                      <RangeSliderTrack>
-                        <RangeSliderFilledTrack />
-                      </RangeSliderTrack>
-                      <RangeSliderThumb index={0} />
-                      <RangeSliderThumb index={1} />
-                    </RangeSlider>
+                <Box maxW="300px">
+                  <RangeSliderMarkRating/>
                   </Box>
-                </Td>
+               </Td>
               </Tr>
+
               <Tr>
                 <Td>Buchart</Td>
                 <Td>
                   <Box mb={4}>
-                    <RadioGroup>
+                  <RadioGroup>
                       <Stack direction="row">
                         <Radio value="1">Druckausgabe</Radio>
                         <Radio value="2">Kindle</Radio>
@@ -102,16 +319,7 @@ import {
                 <Td>Preis</Td>
                 <Td>
                   <Box maxW="300px">
-                    <RangeSlider
-                      aria-label={["min", "max"]}
-                      defaultValue={[0, 10]}
-                    >
-                      <RangeSliderTrack>
-                        <RangeSliderFilledTrack />
-                      </RangeSliderTrack>
-                      <RangeSliderThumb index={0} />
-                      <RangeSliderThumb index={1} />
-                    </RangeSlider>
+                    <RangeSliderPreis/>
                   </Box>
                 </Td>
               </Tr>
@@ -119,16 +327,7 @@ import {
                 <Td>Rabatt</Td>
                 <Td>
                   <Box maxW="300px">
-                    <RangeSlider
-                      aria-label={["min", "max"]}
-                      defaultValue={[0, 10]}
-                    >
-                      <RangeSliderTrack>
-                        <RangeSliderFilledTrack />
-                      </RangeSliderTrack>
-                      <RangeSliderThumb index={0} />
-                      <RangeSliderThumb index={1} />
-                    </RangeSlider>
+                    <RangeSliderRabatt/>
                   </Box>
                 </Td>
               </Tr>
@@ -137,7 +336,9 @@ import {
                 <Td>
                   <FormControl display="flex" alignItems="center">
                     <FormLabel mb="0"></FormLabel>
-                    <Switch id="lieferbar" />
+                    <Switch 
+                      id="lieferbar"
+                      />
                   </FormControl>
                 </Td>
               </Tr>
@@ -174,79 +375,63 @@ import {
         </TableContainer>
       
     <Box display="flex" justifyContent="center" alignItems="center" marginBottom="4">
-        <Button 
-          onClick={() => {
-            const examplePromise = new Promise((resolve) => {
-              setTimeout(() => resolve(200), 1000);
-            });
-
-            toast.promise(examplePromise, {
-              success: { title: 'Erfolgreich', description: 'Buch gefunden' },
-              error: { title: 'Fehler', description: 'Suche konnte nicht durchgeführt werden' },
-              loading: { title: 'Bitte warten', description: 'Vorgang wird ausgeführt' },
-            });
-          }}
-        >
-          Buch suchen
-        </Button>
+    <Button 
+  onClick={() => {
+    if (titelValue.trim() !== '' || isbnValue.trim() !== '') {
+      setSearchClicked(true);
+    } else {
+      // Benutzer über leeres Suchfeld informieren
+      toast({
+        title: 'Achtung',
+        description: 'Bitte geben Sie einen Titel oder eine ISBN für die Suche ein.',
+        status: 'warning',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  }}
+>
+  Buch suchen
+</Button>
       </Box>
-
-    <TableContainer>
-  <Table variant='striped' colorScheme='gray'>
-    <TableCaption>Gefundene Bücher</TableCaption>
-    <Thead>
-      <Tr>
-        <Th>Titel</Th>
-        <Th>ISBN Nummer</Th>
-        <Th>Rating</Th>
-        <Th>Buchart</Th>
-        <Th>Preis</Th>
-        <Th>Rabatt</Th>
-        <Th>Lieferbar</Th>
-        <Th>Erscheinungsjahr</Th>
-        <Th>Homepage</Th>
-      </Tr>
-    </Thead>
-    <Tbody>
-      <Tr>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-      </Tr>
-      <Tr>
-        
-      <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-      </Tr>
-      <Tr>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-        <Td></Td>
-      </Tr>
-    </Tbody>
-  </Table>
-</TableContainer>
-
+      <TableContainer>
+        <Table variant='striped' colorScheme='gray'>
+          <TableCaption>Gefundene Bücher</TableCaption>
+          <Thead>
+            <Tr>
+            <Th>Titel</Th>
+            <Th>ISBN</Th>
+            <Th>Rating</Th>
+            <Th>Art</Th>
+            <Th>Preis</Th>
+            <Th>Rabatt</Th>
+            <Th>Lieferbar</Th>
+            <Th>Datum</Th>
+            <Th>Homepage</Th>
+            <Th>Schlagwörter</Th>
+            <Th>Link</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+          {fetchedData._embedded.buecher.map((buch, index) => (
+              <Tr key={index}>
+                <Td>{buch.titel.titel}</Td>
+                <Td>{buch.isbn}</Td>
+                <Td>{buch.rating}/10</Td>
+                <Td>{buch.art}</Td>
+                <Td>{buch.preis}€</Td>
+                <Td>{(buch.rabatt * 100).toFixed(2)}%</Td>
+                <Td>{buch.lieferbar ? 'Ja' : 'Nein'}</Td>
+                <Td>{buch.datum}</Td>
+                <Td><a href={buch.homepage} target="_blank" rel="noopener noreferrer">{buch.homepage}</a></Td>
+                <Td>{buch.schlagwoerter.join(', ')}</Td>
+                <Td><a href={buch._links.self.href} target="_blank" rel="noopener noreferrer">{buch._links.self.href}</a></Td>
+             </Tr>
+            ))}    
+          </Tbody>
+        </Table>
+      </TableContainer>
     </div>
     );
   }
-  export default Buchsuchen;
+export default Buchsuchen;

@@ -19,7 +19,8 @@ const Navigation = () => {
     >
       <Box>
         <Link href="/" fontSize="xl" fontWeight="bold">
-            LOGO
+            <a href = "https://www.h-ka.de/"><img src = "src\components\logo.png" alt = "H-KA" /></a>
+            Home
         </Link>
       </Box>
 
@@ -31,6 +32,9 @@ const Navigation = () => {
             </Link>
             <Link href="/buchanlegen" mr={4} fontWeight="bold"> 
                 BuchAnlegen
+            </Link>
+            <Link href="/buchzeigen" mr={4} fontWeight="bold"> 
+                BuchZeigen
             </Link>
       </Flex>
         <Spacer/>
