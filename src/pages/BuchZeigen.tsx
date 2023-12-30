@@ -1,44 +1,46 @@
-import { Box, Button, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
-import {useState} from "react";
+/* eslint-disable @typescript-eslint/no-misused-promises */
+import { Box, Button, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react'
+import { useState } from 'react'
 
 const ButtonClick = () => {
   interface Book {
-    isbn: string;
-    rating: number;
-    art: string;
-    preis: number;
-    rabatt: number;
-    lieferbar: boolean;
-    datum: string;
-    homepage: string;
-    schlagwoerter: string[];
+    isbn: string
+    rating: number
+    art: string
+    preis: number
+    rabatt: number
+    lieferbar: boolean
+    datum: string
+    homepage: string
+    schlagwoerter: string[]
     titel: {
-      titel: string;
-      untertitel: string;
-    };
+      titel: string
+      untertitel: string
+    }
     _links: {
       self: {
-        href: string;
-      };
-    };
+        href: string
+      }
+    }
   }
   interface Embedded {
-    buecher: Book[];
+    buecher: Book[]
   }
 
   interface FetchedData {
-    _embedded: Embedded;
+    _embedded: Embedded
   }
 
-  const [fetchedData, setFetchedData] = useState<FetchedData>({ _embedded: { buecher: [] } });
+  const [fetchedData, setFetchedData] = useState<FetchedData>({ _embedded: { buecher: [] } })
 
-  async function getFetchedData(){
-    const response = await fetch("https://localhost:3000/rest");
-    const fetchedData = await response.json();
-    setFetchedData(fetchedData);
+  async function getFetchedData () {
+    const response = await fetch('https://localhost:3000/rest')
+    const fetchedData = await response.json()
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    setFetchedData(fetchedData)
   }
-    
-    return (
+
+  return (
       <div>
         <Box display="flex" justifyContent="center" alignItems="center" marginBottom="4">
           {<Button onClick={getFetchedData}>
@@ -78,12 +80,12 @@ const ButtonClick = () => {
                         <Td>{buch.schlagwoerter.join(', ')}</Td>
                         <Td><a href={buch._links.self.href} target="_blank" rel="noopener noreferrer">{buch._links.self.href}</a></Td>
                     </Tr>
-                    ))}    
+                  ))}
                   </Tbody>
                 </Table>
               </TableContainer>
             </div>
-            );
-          }
+  )
+}
 
-  export default ButtonClick
+export default ButtonClick

@@ -1,157 +1,146 @@
-import  { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 
 import {
-    FormHelperText,
-    Input,
-    Checkbox,
-    Stack,
-    RadioGroup,
-    Table,
-    FormControl,
-    Radio,
-    Thead,
-    Tbody,
-    Menu,
+  FormHelperText,
+  Input,
+  Checkbox,
+  Stack,
+  RadioGroup,
+  Table,
+  FormControl,
+  Radio,
+  Thead,
+  Tbody,
+  Menu,
   MenuButton,
   MenuList,
   MenuItem,
-    Tr,
-    Th,
-    Td,
-    TableCaption,
-    TableContainer,
-    Button,
-    Box,
-    useToast
-  } from "@chakra-ui/react";
-  
-  const Buchsuchen = () => {
-    const toast = useToast();
-    const [titelValue, setTitelValue] = useState('');
-    const [isbnValue, setIsbnValue] = useState('');
-    const [searchClicked, setSearchClicked] = useState(false);
-    const [ratingValue, setRatingValue] = useState<number | null>(null); // Neue State-Variable für das Rating
-    const [druckausgabeChecked, setDruckausgabeChecked] = useState(false);
-    const [kindleChecked, setKindleChecked] = useState(false);
-    const [buchArtChecked, setBuchArtChecked] = useState(false);
-    const [lieferbarValue, setLieferbarValue] = useState<string>(''); // Neue State-Variable für Lieferbar
+  Tr,
+  Th,
+  Td,
+  TableCaption,
+  TableContainer,
+  Button,
+  Box,
+  useToast
+} from '@chakra-ui/react'
 
-    interface Book {
-      isbn: string;
-      rating: number;
-      art: string;
-      preis: number;
-      rabatt: number;
-      lieferbar: boolean;
-      datum: string;
-      homepage: string;
-      schlagwoerter: string[];
-      titel: {
-        titel: string;
-        untertitel: string;
-      };
-      _links: {
-        self: {
-          href: string;
-        };
-      };
+const Buchsuchen = () => {
+  const toast = useToast()
+  const [titelValue, setTitelValue] = useState('')
+  const [isbnValue, setIsbnValue] = useState('')
+  const [searchClicked, setSearchClicked] = useState(false)
+  const [ratingValue, setRatingValue] = useState<number | null>(null) // Neue State-Variable für das Rating
+  const [druckausgabeChecked, setDruckausgabeChecked] = useState(false)
+  const [kindleChecked, setKindleChecked] = useState(false)
+  const [buchArtChecked, setBuchArtChecked] = useState(false)
+  const [lieferbarValue, setLieferbarValue] = useState<string>('') // Neue State-Variable für Lieferbar
+
+  interface Book {
+    isbn: string
+    rating: number
+    art: string
+    preis: number
+    rabatt: number
+    lieferbar: boolean
+    datum: string
+    homepage: string
+    schlagwoerter: string[]
+    titel: {
+      titel: string
+      untertitel: string
     }
-    interface Embedded {
-      buecher: Book[];
-    }
-
-    interface FetchedData {
-      _embedded: Embedded;
-    }
-    const [fetchedData, setFetchedData] = useState<FetchedData>({ _embedded: { buecher: [] } });
-
-    
-    
-    useEffect(() => {
-      const fetchDataFromApi = async () => {
-        try {
-          let apiUrl = 'https://localhost:3000/rest?';
-      
-          if (titelValue.trim() !== '') {
-            apiUrl += `titel=${titelValue}`;
-          }
-      
-          if (isbnValue.trim() !== '') {
-            apiUrl += `&isbn=${isbnValue}`;
-          }
-  
-          if (ratingValue !== null) {
-            apiUrl += `&rating=${ratingValue}`;
-          }
-  
-          if (druckausgabeChecked == true && kindleChecked == false) {
-              apiUrl += `&art=DRUCKAUSGABE`;
-              setBuchArtChecked(true);
-          }
-  
-          else if(kindleChecked == true && druckausgabeChecked == false) {
-              apiUrl += `&art=KINDLE`;
-              setBuchArtChecked(true);
-          }
-          
-          if (lieferbarValue !== '') {
-            apiUrl += `&lieferbar=${lieferbarValue === 'Ja' ? 'true' : 'false'}`;
-          }
-      
-          const response = await axios.get(apiUrl);
-          console.log('Response data:', response.data);
-      
-          if (response.data._embedded.buecher.length === 0) {
-            return 404;
-          }
-      
-          setFetchedData(response.data);
-          return 200;
-        } catch (error) {
-          console.error('Fehler beim Abrufen der Daten:', error);
-          return 500;
-        }
-      };
-
-      if (searchClicked) {
-        (async () => {
-          const status = await fetchDataFromApi();
-    
-          if (status === 200) {
-            toast({
-              title: 'Erfolgreich',
-              description: 'Buch gefunden',
-              status: 'success',
-              duration: 3000,
-              isClosable: true,
-            });
-          } else if (status === 404) {
-            toast({
-              title: 'Info',
-              description: 'Kein Buch gefunden',
-              status: 'info',
-              duration: 3000,
-              isClosable: true,
-            });
-          } else {
-            toast({
-              title: 'Fehler',
-              description: 'Suche konnte nicht durchgeführt werden',
-              status: 'error',
-              duration: 3000,
-              isClosable: true,
-            });
-          }
-    
-          setSearchClicked(false);
-        })();
+    _links: {
+      self: {
+        href: string
       }
-    }, [searchClicked, toast, titelValue, isbnValue, ratingValue, druckausgabeChecked, kindleChecked, lieferbarValue]);
-    
-      return (
+    }
+  }
+  interface Embedded {
+    buecher: Book[]
+  }
+
+  interface FetchedData {
+    _embedded: Embedded
+  }
+  const [fetchedData, setFetchedData] = useState<FetchedData>({ _embedded: { buecher: [] } })
+  useEffect(() => {
+    const fetchDataFromApi = async () => {
+      try {
+        let apiUrl = 'https://localhost:3000/rest?'
+
+        if (titelValue.trim() !== '') {
+          apiUrl += `titel=${titelValue}`
+        }
+        if (isbnValue.trim() !== '') {
+          apiUrl += `&isbn=${isbnValue}`
+        }
+        if (ratingValue !== null) {
+          apiUrl += `&rating=${ratingValue}`
+        }
+        if (druckausgabeChecked && !kindleChecked) {
+          apiUrl += '&art=DRUCKAUSGABE'
+          setBuchArtChecked(true)
+        } else if (kindleChecked && !druckausgabeChecked) {
+          apiUrl += '&art=KINDLE'
+          setBuchArtChecked(true)
+        }
+        if (lieferbarValue !== '') {
+          apiUrl += `&lieferbar=${lieferbarValue === 'Ja' ? 'true' : 'false'}`
+        }
+        const response = await axios.get(apiUrl)
+        console.log('Response data:', response.data)
+        if (response.data._embedded.buecher.length === 0) {
+          return 404
+        }
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        setFetchedData(response.data)
+        return 200
+      } catch (error) {
+        console.error('Fehler beim Abrufen der Daten:', error)
+        return 500
+      }
+    }
+
+    if (searchClicked) {
+      void (async () => {
+        const status = await fetchDataFromApi()
+
+        if (status === 200) {
+          toast({
+            title: 'Erfolgreich',
+            description: 'Buch gefunden',
+            status: 'success',
+            duration: 3000,
+            isClosable: true
+          })
+        } else if (status === 404) {
+          toast({
+            title: 'Info',
+            description: 'Kein Buch gefunden',
+            status: 'info',
+            duration: 3000,
+            isClosable: true
+          })
+        } else {
+          toast({
+            title: 'Fehler',
+            description: 'Suche konnte nicht durchgeführt werden',
+            status: 'error',
+            duration: 3000,
+            isClosable: true
+          })
+        }
+
+        setSearchClicked(false)
+      })()
+    }
+  }, [searchClicked, toast, titelValue, isbnValue, ratingValue, druckausgabeChecked, kindleChecked, lieferbarValue])
+
+  return (
       <div style = {{
-        backgroundColor: "white",
+        backgroundColor: 'white'
       }}>
         <TableContainer>
           <Table variant="simple">
@@ -169,7 +158,7 @@ import {
            <FormControl>
           <Input
               value={titelValue}
-              onChange={(event) => setTitelValue(event.target.value)}
+              onChange={(event) => { setTitelValue(event.target.value) }}
               placeholder="Titel eingeben"
               />
               </FormControl>
@@ -183,9 +172,9 @@ import {
                     <FormControl>
                     <Input
                     value={isbnValue}
-                    onChange={(event) => setIsbnValue(event.target.value)}
+                    onChange={(event) => { setIsbnValue(event.target.value) }}
                     />
-                      <FormHelperText>Example: "9780131969452"</FormHelperText>
+                      <FormHelperText>Example: 9780131969452</FormHelperText>
                     </FormControl>
                   </Box>
                 </Td>
@@ -196,13 +185,13 @@ import {
                 <Box maxW="300px">
         <Menu>
           <MenuButton as={Button}>
-            {ratingValue !== null ? ratingValue : 'Choose'}
+            {ratingValue ?? 'Choose'}
           </MenuButton>
           <MenuList>
             {[1, 2, 3, 4, 5].map((value) => (
               <MenuItem
                 key={value}
-                onClick={() => setRatingValue(value)}
+                onClick={() => { setRatingValue(value) }}
               >
                 {value}
               </MenuItem>
@@ -222,7 +211,7 @@ import {
               <Checkbox
                 colorScheme="blue"
                 defaultChecked={druckausgabeChecked}
-                onChange={(e) => setDruckausgabeChecked(e.target.checked)}
+                onChange={(e) => { setDruckausgabeChecked(e.target.checked) }}
               >
                 Druckausgabe
               </Checkbox>
@@ -231,7 +220,7 @@ import {
               <Checkbox
                 colorScheme="blue"
                 defaultChecked={kindleChecked}
-                onChange={(e) => setKindleChecked(e.target.checked)}
+                onChange={(e) => { setKindleChecked(e.target.checked) }}
               >
                 Kindle
               </Checkbox>
@@ -244,7 +233,7 @@ import {
                 <Td>
     <RadioGroup
       value={lieferbarValue}
-      onChange={(value) => setLieferbarValue(value as string)}
+      onChange={(value) => { setLieferbarValue(value) }}
     >
       <Stack spacing={5} direction='row'>
         <Radio colorScheme='blue' value='Ja'>
@@ -260,14 +249,14 @@ import {
               <Box mb={4}>
               </Box>
             </Tbody>
-          </Table>   
+          </Table>
         </TableContainer>
-      
+
     <Box display="flex" justifyContent="center" alignItems="center" marginBottom="4">
-    <Button 
+    <Button
   onClick={() => {
-    if (titelValue.trim() !== '' || isbnValue.trim() !== '' || ratingValue !== null || buchArtChecked == true || lieferbarValue !== null) {
-      setSearchClicked(true);
+    if (titelValue.trim() !== '' || isbnValue.trim() !== '' || ratingValue !== null || buchArtChecked || lieferbarValue !== null) {
+      setSearchClicked(true)
     } else {
       // Benutzer über leeres Suchfeld informieren
       toast({
@@ -275,8 +264,8 @@ import {
         description: 'Bitte geben Sie einen Titel oder eine ISBN für die Suche ein.',
         status: 'warning',
         duration: 3000,
-        isClosable: true,
-      });
+        isClosable: true
+      })
     }
   }}
 >
@@ -316,11 +305,11 @@ import {
                 <Td>{buch.schlagwoerter.join(', ')}</Td>
                 <Td><a href={buch._links.self.href} target="_blank" rel="noopener noreferrer">{buch._links.self.href}</a></Td>
              </Tr>
-            ))}    
+          ))}
           </Tbody>
         </Table>
       </TableContainer>
     </div>
-    );
-  }
-export default Buchsuchen;
+  )
+}
+export default Buchsuchen

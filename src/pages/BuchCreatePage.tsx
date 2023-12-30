@@ -15,15 +15,15 @@ import {
   Stack,
   Radio,
   useToast
-} from '@chakra-ui/react';
+} from '@chakra-ui/react'
 
 const Buchanlegen = () => {
-  const toast = useToast();
+  const toast = useToast()
 
   return (
     <div style = {{
-      backgroundColor: "white",
-      minHeight: "100vh",
+      backgroundColor: 'white',
+      minHeight: '100vh'
     }}>
       <TableContainer>
         <Table variant="simple">
@@ -105,24 +105,24 @@ const Buchanlegen = () => {
       </TableContainer>
 
       <Box display="flex" justifyContent="center" alignItems="center" marginBottom="4" marginTop="30">
-        <Button 
+        <Button
           onClick={() => {
             const examplePromise = new Promise((resolve) => {
-              setTimeout(() => resolve(200), 1000);
-            });
+              setTimeout(() => { resolve(200) }, 1000)
+            })
 
             toast.promise(examplePromise, {
               success: { title: 'Erfolgreich', description: 'Buch erfolgreich angelegt' },
               error: { title: 'Fehler', description: 'Buch konnte nicht angelegt werden' },
-              loading: { title: 'Bitte warten', description: 'Vorgang wird ausgeführt' },
-            });
+              loading: { title: 'Bitte warten', description: 'Vorgang wird ausgeführt' }
+            })
           }}
         >
           Buch anlegen
         </Button>
       </Box>
     </div>
-  );
-};
+  )
+}
 
-export default Buchanlegen;
+export default Buchanlegen
