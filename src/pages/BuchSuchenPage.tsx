@@ -12,39 +12,37 @@ import {
   Radio,
   Thead,
   Tbody,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalFooter,
-    ModalBody,
-    ModalCloseButton,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
   Menu,
   MenuButton,
   MenuList,
   MenuItem,
-    Tr,
-    Th,
-    Td,
-    TableCaption,
-    TableContainer,
-    Button,
-    Box,
-    useToast
-  } from "@chakra-ui/react";
-  
-  const Buchsuchen = () => {
-    const toast = useToast();
-    const [titelValue, setTitelValue] = useState('');
-    const [isbnValue, setIsbnValue] = useState('');
-    const [searchClicked, setSearchClicked] = useState(false);
-    const [ratingValue, setRatingValue] = useState<number | null>(null); // Neue State-Variable für das Rating
-    const [druckausgabeChecked, setDruckausgabeChecked] = useState(false);
-    const [kindleChecked, setKindleChecked] = useState(false);
-    const [buchArtChecked, setBuchArtChecked] = useState(false);
-    const [lieferbarValue, setLieferbarValue] = useState<string>(''); // Neue State-Variable für Lieferbar
-    const [selectedBook, setSelectedBook] = useState<Book | null>(null); // Zustand für ausgewähltes Buch
-
+  Tr,
+  Th,
+  Td,
+  TableCaption,
+  TableContainer,
+  Button,
+  Box,
+  useToast
+} from '@chakra-ui/react'
+const Buchsuchen = () => {
+  const toast = useToast()
+  const [titelValue, setTitelValue] = useState('')
+  const [isbnValue, setIsbnValue] = useState('')
+  const [searchClicked, setSearchClicked] = useState(false)
+  const [ratingValue, setRatingValue] = useState<number | null>(null) // Neue State-Variable für das Rating
+  const [druckausgabeChecked, setDruckausgabeChecked] = useState(false)
+  const [kindleChecked, setKindleChecked] = useState(false)
+  const [buchArtChecked, setBuchArtChecked] = useState(false)
+  const [lieferbarValue, setLieferbarValue] = useState<string>('') // Neue State-Variable für Lieferbar
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null) // Zustand für ausgewähltes Buch
 
   interface Book {
     isbn: string
@@ -301,7 +299,7 @@ import {
           </Thead>
           <Tbody>
             {fetchedData._embedded.buecher.map((buch, index) => (
-              <Tr key={index} onClick={() => setSelectedBook(buch)}>
+              <Tr key={index} onClick={() => { setSelectedBook(buch) }}>
                 <Td>{buch.titel.titel}</Td>
                 <Td>{buch.isbn}</Td>
                 <Td>{buch.rating}/5</Td>
@@ -327,8 +325,8 @@ import {
         </Table>
       </TableContainer>
 
-      {selectedBook && (
-        <Modal isOpen={true} onClose={() => setSelectedBook(null)}>
+      {(selectedBook != null) && (
+        <Modal isOpen={true} onClose={() => { setSelectedBook(null) }}>
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>{selectedBook.titel.titel}</ModalHeader>
@@ -351,7 +349,7 @@ import {
         </Modal>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default Buchsuchen;
+export default Buchsuchen
