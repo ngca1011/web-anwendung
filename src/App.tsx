@@ -7,11 +7,11 @@ import { AuthProvider } from './components/Auth.tsx'
 import BuchZeigen from './pages/BuchZeigen.tsx'
 import React from 'react'
 
-function App () {
+function App() {
   let Component: React.ComponentType = Home
 
   switch (window.location.pathname) {
-    case '/' :
+    case '/':
       Component = Home
       break
     case '/buchsuchen':
@@ -28,16 +28,16 @@ function App () {
   }
   return (
     <AuthProvider>
-       <div
+      <div
         style={{
           backgroundImage: 'url("../public/background.jpg")',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          minHeight: '100vh'
+          minHeight: '100vh',
         }}
       >
-      <Navigation />
-      <Component />
+        <Navigation />
+        <Component />
       </div>
     </AuthProvider>
   )

@@ -8,50 +8,48 @@ const Navigation = () => {
   return (
     <Flex
       p={4}
-      align="center"
-      justify="space-between"
-      bg="#B38B6D"
-      color="white"
-      style = {{
-        backgroundImage: 'url("../../public/NavBar.png")'
+      align='center'
+      justify='space-between'
+      bg='#B38B6D'
+      color='white'
+      style={{
+        backgroundImage: 'url("../../public/NavBar.png")',
       }}
     >
       <Box>
-        <Link href="/" fontSize="xl" fontWeight="bold">
-            <a href = "https://www.h-ka.de/"><img src = "..\public\logo.png" alt = "H-KA"
-              width="330"
-            /></a>
-            Home
+        <Link href='/' fontSize='xl' fontWeight='bold'>
+          <a href='https://www.h-ka.de/'>
+            <img src='..\public\logo.png' alt='H-KA' width='330' />
+          </a>
+          Home
         </Link>
       </Box>
 
       <Spacer />
 
       <Flex>
-            <Link href="/buchsuchen" mr={4} fontWeight="bold">
-                BuchSuchen
-            </Link>
-            <Link href="/buchanlegen" mr={4} fontWeight="bold">
-                BuchAnlegen
-            </Link>
-            <Link href="/buchzeigen" mr={4} fontWeight="bold">
-                BuchZeigen
-            </Link>
+        <Link href='/buchsuchen' mr={4} fontWeight='bold'>
+          BuchSuchen
+        </Link>
+        <Link href='/buchanlegen' mr={4} fontWeight='bold'>
+          BuchAnlegen
+        </Link>
+        <Link href='/buchzeigen' mr={4} fontWeight='bold'>
+          BuchZeigen
+        </Link>
       </Flex>
-        <Spacer/>
-        {isLoggedIn
-          ? (
+      <Spacer />
+      {isLoggedIn ? (
         <Box>
-          <Link href="/anmelden">
+          <Link href='/anmelden'>
             <Icon as={MdPerson} />
           </Link>
         </Box>
-            )
-          : (
-        <Link href="/anmelden" fontWeight="bold">
+      ) : (
+        <Link href='/anmelden' fontWeight='bold'>
           Login
         </Link>
-            )}
+      )}
     </Flex>
   )
 }

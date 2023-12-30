@@ -30,7 +30,7 @@ import {
   TableContainer,
   Button,
   Box,
-  useToast
+  useToast,
 } from '@chakra-ui/react'
 const Buchsuchen = () => {
   const toast = useToast()
@@ -120,7 +120,7 @@ const Buchsuchen = () => {
             description: 'Buch gefunden',
             status: 'success',
             duration: 3000,
-            isClosable: true
+            isClosable: true,
           })
         } else if (status === 404) {
           toast({
@@ -128,7 +128,7 @@ const Buchsuchen = () => {
             description: 'Kein Buch gefunden',
             status: 'info',
             duration: 3000,
-            isClosable: true
+            isClosable: true,
           })
         } else {
           toast({
@@ -136,170 +136,201 @@ const Buchsuchen = () => {
             description: 'Suche konnte nicht durchgeführt werden',
             status: 'error',
             duration: 3000,
-            isClosable: true
+            isClosable: true,
           })
         }
 
         setSearchClicked(false)
       })()
     }
-  }, [searchClicked, toast, titelValue, isbnValue, ratingValue, druckausgabeChecked, kindleChecked, lieferbarValue])
+  }, [
+    searchClicked,
+    toast,
+    titelValue,
+    isbnValue,
+    ratingValue,
+    druckausgabeChecked,
+    kindleChecked,
+    lieferbarValue,
+  ])
 
   return (
-      <div style = {{
-        backgroundColor: 'white'
-      }}>
-        <TableContainer>
-          <Table variant="simple">
-            <Thead>
-              <Tr>
-                <Th>Kriterium</Th>
-                <Th>Anpassen</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-            <Tr>
-          <Td>Titel</Td>
-          <Td>
-           <Box mb={4} maxW="300px">
-           <FormControl>
-          <Input
-              value={titelValue}
-              onChange={(event) => { setTitelValue(event.target.value) }}
-              placeholder="Titel eingeben"
-              />
-              </FormControl>
-              </Box>
-              </Td>
-              </Tr>
-              <Tr>
-                <Td>ISBN Number</Td>
-                <Td>
-                  <Box mb={4} maxW="300px">
-                    <FormControl>
-                    <Input
-                    value={isbnValue}
-                    onChange={(event) => { setIsbnValue(event.target.value) }}
-                    />
-                      <FormHelperText>Example: 9780131969452</FormHelperText>
-                    </FormControl>
-                  </Box>
-                </Td>
-              </Tr>
-              <Tr>
-               <Td>Rating</Td>
-                <Td>
-                <Box maxW="300px">
-        <Menu>
-          <MenuButton as={Button}>
-            {ratingValue ?? 'Choose'}
-          </MenuButton>
-          <MenuList>
-            {[1, 2, 3, 4, 5].map((value) => (
-              <MenuItem
-                key={value}
-                onClick={() => { setRatingValue(value) }}
-              >
-                {value}
-              </MenuItem>
-            ))}
-          </MenuList>
-        </Menu>
-      </Box>
-               </Td>
-              </Tr>
-
-              <Tr>
-                <Td>Buchart</Td>
-                <Td>
-                <Box mb={4}>
-            <Stack spacing={5} direction="row">
-              {/* Checkbox für Druckausgabe 1 */}
-              <Checkbox
-                colorScheme="blue"
-                defaultChecked={druckausgabeChecked}
-                onChange={(e) => { setDruckausgabeChecked(e.target.checked) }}
-              >
-                Druckausgabe
-              </Checkbox>
-
-              {/* Checkbox für Druckausgabe 2 */}
-              <Checkbox
-                colorScheme="blue"
-                defaultChecked={kindleChecked}
-                onChange={(e) => { setKindleChecked(e.target.checked) }}
-              >
-                Kindle
-              </Checkbox>
-            </Stack>
-          </Box>
-                </Td>
-              </Tr>
-              <Tr>
-                <Td>Lieferbar</Td>
-                <Td>
-    <RadioGroup
-      value={lieferbarValue}
-      onChange={(value) => { setLieferbarValue(value) }}
+    <div
+      style={{
+        backgroundColor: 'white',
+      }}
     >
-      <Stack spacing={5} direction='row'>
-        <Radio colorScheme='blue' value='Ja'>
-          Ja
-        </Radio>
-        <Radio colorScheme='blue' value='Nein'>
-          Nein
-        </Radio>
-      </Stack>
-    </RadioGroup>
-  </Td>
-              </Tr>
-              <Box mb={4}>
-              </Box>
-            </Tbody>
-          </Table>
-        </TableContainer>
+      <TableContainer>
+        <Table variant='simple'>
+          <Thead>
+            <Tr>
+              <Th>Kriterium</Th>
+              <Th>Anpassen</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            <Tr>
+              <Td>Titel</Td>
+              <Td>
+                <Box mb={4} maxW='300px'>
+                  <FormControl>
+                    <Input
+                      value={titelValue}
+                      onChange={(event) => {
+                        setTitelValue(event.target.value)
+                      }}
+                      placeholder='Titel eingeben'
+                    />
+                  </FormControl>
+                </Box>
+              </Td>
+            </Tr>
+            <Tr>
+              <Td>ISBN Number</Td>
+              <Td>
+                <Box mb={4} maxW='300px'>
+                  <FormControl>
+                    <Input
+                      value={isbnValue}
+                      onChange={(event) => {
+                        setIsbnValue(event.target.value)
+                      }}
+                    />
+                    <FormHelperText>Example: 9780131969452</FormHelperText>
+                  </FormControl>
+                </Box>
+              </Td>
+            </Tr>
+            <Tr>
+              <Td>Rating</Td>
+              <Td>
+                <Box maxW='300px'>
+                  <Menu>
+                    <MenuButton as={Button}>{ratingValue ?? 'Choose'}</MenuButton>
+                    <MenuList>
+                      {[1, 2, 3, 4, 5].map((value) => (
+                        <MenuItem
+                          key={value}
+                          onClick={() => {
+                            setRatingValue(value)
+                          }}
+                        >
+                          {value}
+                        </MenuItem>
+                      ))}
+                    </MenuList>
+                  </Menu>
+                </Box>
+              </Td>
+            </Tr>
 
-    <Box display="flex" justifyContent="center" alignItems="center" marginBottom="4">
-    <Button
-  onClick={() => {
-    if (titelValue.trim() !== '' || isbnValue.trim() !== '' || ratingValue !== null || buchArtChecked || lieferbarValue !== null) {
-      setSearchClicked(true)
-    } else {
-      // Benutzer über leeres Suchfeld informieren
-      toast({
-        title: 'Achtung',
-        description: 'Bitte geben Sie einen Titel oder eine ISBN für die Suche ein.',
-        status: 'warning',
-        duration: 3000,
-        isClosable: true
-      })
-    }
-  }}
->
-  Buch suchen
-</Button>
+            <Tr>
+              <Td>Buchart</Td>
+              <Td>
+                <Box mb={4}>
+                  <Stack spacing={5} direction='row'>
+                    {/* Checkbox für Druckausgabe 1 */}
+                    <Checkbox
+                      colorScheme='blue'
+                      defaultChecked={druckausgabeChecked}
+                      onChange={(e) => {
+                        setDruckausgabeChecked(e.target.checked)
+                      }}
+                    >
+                      Druckausgabe
+                    </Checkbox>
+
+                    {/* Checkbox für Druckausgabe 2 */}
+                    <Checkbox
+                      colorScheme='blue'
+                      defaultChecked={kindleChecked}
+                      onChange={(e) => {
+                        setKindleChecked(e.target.checked)
+                      }}
+                    >
+                      Kindle
+                    </Checkbox>
+                  </Stack>
+                </Box>
+              </Td>
+            </Tr>
+            <Tr>
+              <Td>Lieferbar</Td>
+              <Td>
+                <RadioGroup
+                  value={lieferbarValue}
+                  onChange={(value) => {
+                    setLieferbarValue(value)
+                  }}
+                >
+                  <Stack spacing={5} direction='row'>
+                    <Radio colorScheme='blue' value='Ja'>
+                      Ja
+                    </Radio>
+                    <Radio colorScheme='blue' value='Nein'>
+                      Nein
+                    </Radio>
+                  </Stack>
+                </RadioGroup>
+              </Td>
+            </Tr>
+            <Box mb={4}></Box>
+          </Tbody>
+        </Table>
+      </TableContainer>
+
+      <Box display='flex' justifyContent='center' alignItems='center' marginBottom='4'>
+        <Button
+          onClick={() => {
+            if (
+              titelValue.trim() !== '' ||
+              isbnValue.trim() !== '' ||
+              ratingValue !== null ||
+              buchArtChecked ||
+              lieferbarValue !== null
+            ) {
+              setSearchClicked(true)
+            } else {
+              // Benutzer über leeres Suchfeld informieren
+              toast({
+                title: 'Achtung',
+                description: 'Bitte geben Sie einen Titel oder eine ISBN für die Suche ein.',
+                status: 'warning',
+                duration: 3000,
+                isClosable: true,
+              })
+            }
+          }}
+        >
+          Buch suchen
+        </Button>
       </Box>
       <TableContainer>
         <Table variant='striped' colorScheme='gray'>
           <TableCaption>Gefundene Bücher</TableCaption>
           <Thead>
             <Tr>
-            <Th>Titel</Th>
-            <Th>ISBN</Th>
-            <Th>Rating</Th>
-            <Th>Art</Th>
-            <Th>Preis</Th>
-            <Th>Rabatt</Th>
-            <Th>Lieferbar</Th>
-            <Th>Datum</Th>
-            <Th>Homepage</Th>
-            <Th>Schlagwörter</Th>
-            <Th>Link</Th>
+              <Th>Titel</Th>
+              <Th>ISBN</Th>
+              <Th>Rating</Th>
+              <Th>Art</Th>
+              <Th>Preis</Th>
+              <Th>Rabatt</Th>
+              <Th>Lieferbar</Th>
+              <Th>Datum</Th>
+              <Th>Homepage</Th>
+              <Th>Schlagwörter</Th>
+              <Th>Link</Th>
             </Tr>
           </Thead>
           <Tbody>
             {fetchedData._embedded.buecher.map((buch, index) => (
-              <Tr key={index} onClick={() => { setSelectedBook(buch) }}>
+              <Tr
+                key={index}
+                onClick={() => {
+                  setSelectedBook(buch)
+                }}
+              >
                 <Td>{buch.titel.titel}</Td>
                 <Td>{buch.isbn}</Td>
                 <Td>{buch.rating}/5</Td>
@@ -309,13 +340,13 @@ const Buchsuchen = () => {
                 <Td>{buch.lieferbar ? 'Ja' : 'Nein'}</Td>
                 <Td>{buch.datum}</Td>
                 <Td>
-                  <a href={buch.homepage} target="_blank" rel="noopener noreferrer">
+                  <a href={buch.homepage} target='_blank' rel='noopener noreferrer'>
                     {buch.homepage}
                   </a>
                 </Td>
                 <Td>{buch.schlagwoerter.join(', ')}</Td>
                 <Td>
-                  <a href={buch._links.self.href} target="_blank" rel="noopener noreferrer">
+                  <a href={buch._links.self.href} target='_blank' rel='noopener noreferrer'>
                     {buch._links.self.href}
                   </a>
                 </Td>
@@ -325,8 +356,13 @@ const Buchsuchen = () => {
         </Table>
       </TableContainer>
 
-      {(selectedBook != null) && (
-        <Modal isOpen={true} onClose={() => { setSelectedBook(null) }}>
+      {selectedBook != null && (
+        <Modal
+          isOpen={true}
+          onClose={() => {
+            setSelectedBook(null)
+          }}
+        >
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>{selectedBook.titel.titel}</ModalHeader>
@@ -343,8 +379,7 @@ const Buchsuchen = () => {
               <p>Schlagwörter: {selectedBook.schlagwoerter}</p>
               <p>Link: {selectedBook._links.self.href}</p>
             </ModalBody>
-            <ModalFooter>
-            </ModalFooter>
+            <ModalFooter></ModalFooter>
           </ModalContent>
         </Modal>
       )}

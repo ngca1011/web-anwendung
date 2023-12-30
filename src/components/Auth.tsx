@@ -5,7 +5,7 @@ import { useToast } from '@chakra-ui/react'
 const AuthContext = createContext({
   isLoggedIn: false,
   login: (_username: string, _password: string) => {},
-  logout: () => {}
+  logout: () => {},
 })
 
 const useAuthContext = () => useContext(AuthContext)
@@ -25,7 +25,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const response = await axios.post('https://localhost:3000/auth/login', {
         username,
-        password
+        password,
       })
 
       const { token, roles } = response.data
@@ -40,7 +40,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       toast({
         title: 'Erfolgreich',
         description: 'Login erfolgreich',
-        status: 'success'
+        status: 'success',
       })
     } catch (error) {
       console.error('Login error:', error)
@@ -48,7 +48,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       toast({
         title: 'Fehler',
         description: 'Login fehlgeschlagen',
-        status: 'error'
+        status: 'error',
       })
     }
   }
@@ -60,15 +60,13 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     toast({
       title: 'Erfolgreich',
       description: 'Abmeldung ist erfolgreich',
-      status: 'success'
+      status: 'success',
     })
   }
 
   return (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
-        {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>{children}</AuthContext.Provider>
   )
 }
 

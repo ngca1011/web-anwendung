@@ -19,49 +19,56 @@ const Login = () => {
     const roles = localStorage.getItem('roles')
 
     return (
-        <Center h="45vh">
-          <Box textAlign = 'center'>
-             <Heading marginBottom="50" fontSize="30"> Sie sind als {roles} eingeloggt! </Heading>
-             <Button color="blue" outlineColor="black" textAlign = 'center' onClick = {handleLogout}>
-                Abmelden
-             </Button>
-          </Box>
-        </Center>
+      <Center h='45vh'>
+        <Box textAlign='center'>
+          <Heading marginBottom='50' fontSize='30'>
+            {' '}
+            Sie sind als {roles} eingeloggt!{' '}
+          </Heading>
+          <Button color='blue' outlineColor='black' textAlign='center' onClick={handleLogout}>
+            Abmelden
+          </Button>
+        </Box>
+      </Center>
     )
   }
 
   return (
-      <Center h = "45vh">
-        <Box w="400px" h="auto" textAlign="center">
-          <Heading marginBottom="5">Login</Heading>
+    <Center h='45vh'>
+      <Box w='400px' h='auto' textAlign='center'>
+        <Heading marginBottom='5'>Login</Heading>
 
-          <Input
-            type="text"
-            value={username}
-            variant='outline'
-            placeholder='Username'
-            width='auto'
-            marginBottom="3"
-            outlineColor="gray"
-            onChange={(e) => { setUsername(e.target.value) }}
-          />
+        <Input
+          type='text'
+          value={username}
+          variant='outline'
+          placeholder='Username'
+          width='auto'
+          marginBottom='3'
+          outlineColor='gray'
+          onChange={(e) => {
+            setUsername(e.target.value)
+          }}
+        />
 
-          <Input
-            type="password"
-            value={password}
-            variant='outline'
-            placeholder='Password'
-            width='auto'
-            marginBottom="5"
-            outlineColor="gray"
-            onChange={(e) => { setPassword(e.target.value) }}
-          />
-          <br></br>
-          <Button color="blue" outlineColor="black" onClick={handleLogin}>
-            Login
-          </Button>
-        </Box>
-      </Center>
+        <Input
+          type='password'
+          value={password}
+          variant='outline'
+          placeholder='Password'
+          width='auto'
+          marginBottom='5'
+          outlineColor='gray'
+          onChange={(e) => {
+            setPassword(e.target.value)
+          }}
+        />
+        <br></br>
+        <Button color='blue' outlineColor='black' onClick={handleLogin}>
+          Login
+        </Button>
+      </Box>
+    </Center>
   )
 }
 

@@ -14,19 +14,21 @@ import {
   RadioGroup,
   Stack,
   Radio,
-  useToast
+  useToast,
 } from '@chakra-ui/react'
 
 const Buchanlegen = () => {
   const toast = useToast()
 
   return (
-    <div style = {{
-      backgroundColor: 'white',
-      minHeight: '100vh'
-    }}>
+    <div
+      style={{
+        backgroundColor: 'white',
+        minHeight: '100vh',
+      }}
+    >
       <TableContainer>
-        <Table variant="simple">
+        <Table variant='simple'>
           <Thead>
             <Tr>
               <Th>Kriterium</Th>
@@ -37,7 +39,7 @@ const Buchanlegen = () => {
             <Tr>
               <Td>Titel</Td>
               <Td>
-                <Box maxW="300px">
+                <Box maxW='300px'>
                   <FormControl>
                     <Input />
                   </FormControl>
@@ -47,7 +49,7 @@ const Buchanlegen = () => {
             <Tr>
               <Td>ISBN Nummer</Td>
               <Td>
-                <Box maxW="300px">
+                <Box maxW='300px'>
                   <FormControl>
                     <Input />
                   </FormControl>
@@ -59,9 +61,9 @@ const Buchanlegen = () => {
               <Td>
                 <Box mb={4}>
                   <RadioGroup>
-                    <Stack direction="row">
-                      <Radio value="1">Druckausgabe</Radio>
-                      <Radio value="2">Kindle</Radio>
+                    <Stack direction='row'>
+                      <Radio value='1'>Druckausgabe</Radio>
+                      <Radio value='2'>Kindle</Radio>
                     </Stack>
                   </RadioGroup>
                 </Box>
@@ -70,7 +72,7 @@ const Buchanlegen = () => {
             <Tr>
               <Td>Preis</Td>
               <Td>
-                <Box maxW="300px">
+                <Box maxW='300px'>
                   <FormControl>
                     <Input />
                   </FormControl>
@@ -80,7 +82,7 @@ const Buchanlegen = () => {
             <Tr>
               <Td>Rabatt</Td>
               <Td>
-                <Box maxW="300px">
+                <Box maxW='300px'>
                   <FormControl>
                     <Input />
                   </FormControl>
@@ -90,7 +92,7 @@ const Buchanlegen = () => {
             <Tr>
               <Td>Homepage</Td>
               <Td>
-                <Box maxW="300px">
+                <Box maxW='300px'>
                   <FormControl>
                     <Input />
                   </FormControl>
@@ -98,23 +100,29 @@ const Buchanlegen = () => {
               </Td>
             </Tr>
           </Tbody>
-          <Tfoot>
-            {/* Optionaler Tabellenfuß */}
-          </Tfoot>
+          <Tfoot>{/* Optionaler Tabellenfuß */}</Tfoot>
         </Table>
       </TableContainer>
 
-      <Box display="flex" justifyContent="center" alignItems="center" marginBottom="4" marginTop="30">
+      <Box
+        display='flex'
+        justifyContent='center'
+        alignItems='center'
+        marginBottom='4'
+        marginTop='30'
+      >
         <Button
           onClick={() => {
             const examplePromise = new Promise((resolve) => {
-              setTimeout(() => { resolve(200) }, 1000)
+              setTimeout(() => {
+                resolve(200)
+              }, 1000)
             })
 
             toast.promise(examplePromise, {
               success: { title: 'Erfolgreich', description: 'Buch erfolgreich angelegt' },
               error: { title: 'Fehler', description: 'Buch konnte nicht angelegt werden' },
-              loading: { title: 'Bitte warten', description: 'Vorgang wird ausgeführt' }
+              loading: { title: 'Bitte warten', description: 'Vorgang wird ausgeführt' },
             })
           }}
         >
