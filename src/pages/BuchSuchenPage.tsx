@@ -12,6 +12,13 @@ import {
     Radio,
     Thead,
     Tbody,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
     Menu,
   MenuButton,
   MenuList,
@@ -36,6 +43,8 @@ import {
     const [kindleChecked, setKindleChecked] = useState(false);
     const [buchArtChecked, setBuchArtChecked] = useState(false);
     const [lieferbarValue, setLieferbarValue] = useState<string>(''); // Neue State-Variable für Lieferbar
+    const [selectedBook, setSelectedBook] = useState<Book | null>(null); // Zustand für ausgewähltes Buch
+
 
     interface Book {
       isbn: string;
@@ -302,8 +311,8 @@ import {
             </Tr>
           </Thead>
           <Tbody>
-          {fetchedData._embedded.buecher.map((buch, index) => (
-              <Tr key={index}>
+            {fetchedData._embedded.buecher.map((buch, index) => (
+              <Tr key={index} onClick={() => setSelectedBook(buch)}>
                 <Td>{buch.titel.titel}</Td>
                 <Td>{buch.isbn}</Td>
                 <Td>{buch.rating}/5</Td>
@@ -312,15 +321,48 @@ import {
                 <Td>{(buch.rabatt * 100).toFixed(2)}%</Td>
                 <Td>{buch.lieferbar ? 'Ja' : 'Nein'}</Td>
                 <Td>{buch.datum}</Td>
-                <Td><a href={buch.homepage} target="_blank" rel="noopener noreferrer">{buch.homepage}</a></Td>
+                <Td>
+                  <a href={buch.homepage} target="_blank" rel="noopener noreferrer">
+                    {buch.homepage}
+                  </a>
+                </Td>
                 <Td>{buch.schlagwoerter.join(', ')}</Td>
-                <Td><a href={buch._links.self.href} target="_blank" rel="noopener noreferrer">{buch._links.self.href}</a></Td>
-             </Tr>
-            ))}    
+                <Td>
+                  <a href={buch._links.self.href} target="_blank" rel="noopener noreferrer">
+                    {buch._links.self.href}
+                  </a>
+                </Td>
+              </Tr>
+            ))}
           </Tbody>
         </Table>
       </TableContainer>
+
+      {selectedBook && (
+        <Modal isOpen={true} onClose={() => setSelectedBook(null)}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>{selectedBook.titel.titel}</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <p>ISBN: {selectedBook.isbn}</p>
+              <p>Rating: {selectedBook.rating}/5</p>
+              <p>Art: {selectedBook.art}</p>
+              <p>Preis: {selectedBook.preis}</p>
+              <p>Rabatt: {(selectedBook.rabatt * 100).toFixed(2)}%</p>
+              <p>Lieferbar: {selectedBook.lieferbar ? 'Ja' : 'Nein'}</p>
+              <p>Datum: {selectedBook.datum}</p>
+              <p>Homepage: {selectedBook.homepage}</p>
+              <p>Schlagwörter: {selectedBook.schlagwoerter}</p>
+              <p>Link: {selectedBook._links.self.href}</p>
+            </ModalBody>
+            <ModalFooter>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      )}
     </div>
-    );
-  }
+  );
+};
+
 export default Buchsuchen;
