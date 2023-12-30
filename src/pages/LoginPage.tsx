@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Center, Box, Heading, Button, Input } from '@chakra-ui/react'
-import { useAuthContext } from '../Auth'
+import { useAuthContext } from '../components/Auth'
 
 const Login = () => {
   const [username, setUsername] = useState('')

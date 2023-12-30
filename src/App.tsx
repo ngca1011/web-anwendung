@@ -3,7 +3,7 @@ import Home from './pages/HomePage.tsx'
 import Buchsuchen from './pages/BuchSuchenPage.tsx'
 import Buchanlegen from './pages/BuchCreatePage.tsx'
 import Login from './pages/LoginPage.tsx'
-import { AuthProvider } from './Auth.tsx'
+import { AuthProvider } from './components/Auth.tsx'
 import BuchZeigen from './pages/BuchZeigen.tsx'
 import React from 'react'
 
