@@ -42,7 +42,7 @@ const Buchanlegen = () => {
   const handleRadioChange = (value: string) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
-      bookType: value,
+      art: value,
     }));
   };
 
@@ -89,7 +89,7 @@ const Buchanlegen = () => {
                 <Box maxW='300px'>
                   <FormControl>
                     <Input
-                      name="title"
+                      name="titel"
                       value={formData.titel}
                       onChange={handleInputChange}
                     />
@@ -133,7 +133,7 @@ const Buchanlegen = () => {
                 <Box maxW='300px'>
                   <FormControl>
                     <Input
-                      name="price"
+                      name="preis"
                       value={formData.preis}
                       onChange={handleInputChange}
                     />
@@ -147,7 +147,7 @@ const Buchanlegen = () => {
                 <Box maxW='300px'>
                   <FormControl>
                     <Input
-                      name="discount"
+                      name="rabatt"
                       value={formData.rabatt}
                       onChange={handleInputChange}
                     />
