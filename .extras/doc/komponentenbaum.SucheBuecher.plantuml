@@ -1,0 +1,34 @@
+' Preview durch <Alt>d
+
+@startuml BuchSuchen
+
+'top to bottom direction
+
+rectangle BuchSuchen
+rectangle Suchformular
+rectangle Waiting
+rectangle Suchergebnis
+
+BuchSuchen --> Suchformular
+BuchSuchen --> Waiting
+BuchSuchen --> Suchergebnis
+
+rectangle Titel
+rectangle ISBN
+rectangle Rating
+rectangle BuchArt
+rectangle Lieferbar
+
+Suchformular --> Titel
+Suchformular --> ISBN
+Suchformular --> Rating
+Suchformular --> BuchArt
+Suchformular --> Lieferbar
+
+rectangle ErrorMessage
+rectangle GefundeneBuecher
+
+Suchergebnis --> ErrorMessage
+Suchergebnis --> GefundeneBuecher
+
+@enduml

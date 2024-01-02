@@ -1,0 +1,34 @@
+' Preview durch <Alt>d
+' https://plantuml.com/de/state-diagram
+' https://plantuml.com/de/guide
+
+@startuml Zustandsdiagramm
+
+hide empty description
+
+state app.tsx {
+    app.tsx: app
+
+    [*] --> Home: Home
+
+    [*] --> Login: Login/Logout
+
+    state BuchSuchen {
+        [*] --> Suchformular: Suchkriterien eingeben
+        Suchformular --> Waiting: Button "Buch suchen"
+        state SuchergebnisChoice <<choice>>
+        Waiting --> SuchergebnisChoice: Suchergebnis eingetroffen
+
+        state Suchergebnis {
+            SuchergebnisChoice --> GefundeneBuecher: mind. 1 Buch\ngefunden
+            SuchergebnisChoice --> ErrorMessage1: kein Buch\ngefunden
+
+            ErrorMessage1 -right[hidden]-> GefundeneBuecher
+        }
+    }
+    [*] -down-> BuchSuchen: "Buch suchen"
+}
+
+footer (c) Gruppe 9
+
+@enduml
