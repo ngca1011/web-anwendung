@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import type { Book, FetchedData } from '../types/interfaces'; // Import types using 'import type'
+import type { Book, FetchedData } from '../types/interfaces' // Import types using 'import type'
 
 import {
   FormHelperText,
@@ -46,7 +46,7 @@ const Buchsuchen = () => {
   const [lieferbarValue, setLieferbarValue] = useState<string>('') // Neue State-Variable für Lieferbar
   const [selectedBook, setSelectedBook] = useState<Book | null>(null) // Zustand für ausgewähltes Buch
 
-  const [fetchedData, setFetchedData] = useState<FetchedData>({ _embedded: { buecher: [] } });
+  const [fetchedData, setFetchedData] = useState<FetchedData>({ _embedded: { buecher: [] } })
   useEffect(() => {
     const fetchDataFromApi = async () => {
       try {
