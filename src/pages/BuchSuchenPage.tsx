@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import type { Book, FetchedData } from '../types/interfaces'; // Import types using 'import type'
 
 import {
   FormHelperText,
@@ -32,6 +33,7 @@ import {
   Box,
   useToast,
 } from '@chakra-ui/react'
+
 const Buchsuchen = () => {
   const toast = useToast()
   const [titelValue, setTitelValue] = useState('')
@@ -44,34 +46,7 @@ const Buchsuchen = () => {
   const [lieferbarValue, setLieferbarValue] = useState<string>('') // Neue State-Variable für Lieferbar
   const [selectedBook, setSelectedBook] = useState<Book | null>(null) // Zustand für ausgewähltes Buch
 
-  interface Book {
-    isbn: string
-    rating: number
-    art: string
-    preis: number
-    rabatt: number
-    lieferbar: boolean
-    datum: string
-    homepage: string
-    schlagwoerter: string[]
-    titel: {
-      titel: string
-      untertitel: string
-    }
-    _links: {
-      self: {
-        href: string
-      }
-    }
-  }
-  interface Embedded {
-    buecher: Book[]
-  }
-
-  interface FetchedData {
-    _embedded: Embedded
-  }
-  const [fetchedData, setFetchedData] = useState<FetchedData>({ _embedded: { buecher: [] } })
+  const [fetchedData, setFetchedData] = useState<FetchedData>({ _embedded: { buecher: [] } });
   useEffect(() => {
     const fetchDataFromApi = async () => {
       try {
