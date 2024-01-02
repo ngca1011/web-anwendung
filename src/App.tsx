@@ -4,7 +4,6 @@ import Buchsuchen from './pages/BuchSuchenPage.tsx'
 import Buchanlegen from './pages/BuchCreatePage.tsx'
 import Login from './pages/LoginPage.tsx'
 import { AuthProvider } from './components/Auth.tsx'
-import BuchZeigen from './pages/BuchZeigen.tsx'
 import React from 'react'
 
 function App() {
@@ -16,9 +15,6 @@ function App() {
       break
     case '/buchsuchen':
       Component = Buchsuchen
-      break
-    case '/buchzeigen':
-      Component = BuchZeigen
       break
     case '/buchanlegen':
       Component = Buchanlegen

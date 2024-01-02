@@ -34,9 +34,6 @@ const Navigation = () => {
         <Link href='/buchanlegen' mr={4} fontWeight='bold'>
           BuchAnlegen
         </Link>
-        <Link href='/buchzeigen' mr={4} fontWeight='bold'>
-          BuchZeigen
-        </Link>
       </Flex>
       <Spacer />
       {isLoggedIn ? (
