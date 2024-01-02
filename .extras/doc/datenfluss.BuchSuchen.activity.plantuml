@@ -1,0 +1,23 @@
+' Preview durch <Alt>d
+' https://plantuml.com/de/activity-diagram-beta
+' https://plantuml.com/de/guide
+
+@startuml Datenfluss
+
+start
+
+:Suchformular;
+-> Suchkriterien;
+:BuchSuchen;
+-> Liste gefundener Buecher;
+:Suchergebnis;
+
+if (mind. 1 Buch gefunden?) then (ja)
+  :GefundeneBuecher;
+else (nein)
+  :ErrorMessage;
+endif
+
+end
+
+@enduml

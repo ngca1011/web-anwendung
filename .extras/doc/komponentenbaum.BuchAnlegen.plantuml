@@ -1,0 +1,22 @@
+' Preview durch <Alt>d
+
+@startuml CreateBuecher
+
+'top to bottom direction
+
+rectangle BuchAnlegen
+rectangle Titel
+rectangle ISBN
+rectangle BuchArt
+rectangle Preis
+rectangle Rabatt
+rectangle Homepage
+
+BuchAnlegen --> Titel
+BuchAnlegen --> ISBN
+BuchAnlegen --> BuchArt
+BuchAnlegen --> Preis
+BuchAnlegen --> Rabatt
+BuchAnlegen --> Homepage
+
+@enduml
