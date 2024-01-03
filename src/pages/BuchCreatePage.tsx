@@ -51,6 +51,16 @@ const Buchanlegen = () => {
     setArt(value);
   };
 
+  const handleRadioChange = (value: string) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      art: value,
+    }));
+  
+  const handleArtChange = (value: string) => {
+    setArt(value);
+  };
+
   const payload = {
     isbn: isbn,
     rating: rating,
@@ -122,6 +132,8 @@ const Buchanlegen = () => {
                       name="titel"
                       value={titel}
                       onChange={(e) => setTitel(e.target.value)}
+                      value={titel}
+                      onChange={(e) => setTitel(e.target.value)}
                     />
                   </FormControl>
                 </Box>
@@ -136,6 +148,8 @@ const Buchanlegen = () => {
                       name="isbn"
                       value={isbn}
                       onChange={(e) => setIsbn(e.target.value)}
+                      value={isbn}
+                      onChange={(e) => setIsbn(e.target.value)}
                     />
                   </FormControl>
                 </Box>
@@ -145,6 +159,7 @@ const Buchanlegen = () => {
               <Td>Buchart</Td>
               <Td>
                 <Box mb={4}>
+                  <FormControl>
                   <FormControl>
                     <Stack direction="row">
                       <Checkbox
@@ -195,6 +210,20 @@ const Buchanlegen = () => {
                   <FormControl>
                     <Stack direction="row">
                       <Checkbox
+                        name="art"
+                        isChecked={art === 'DRUCKAUSGABE'}
+                        onChange={() => handleArtChange('DRUCKAUSGABE')}
+                      >
+                        Druckausgabe
+                      </Checkbox>
+                      <Checkbox
+                        name="isKindle"
+                        isChecked={art === 'KINDLE'}
+                        onChange={() => handleArtChange('KINDLE')}
+                      >
+                        Kindle
+                      </Checkbox>
+                      <Checkbox
                         name="lieferbar"
                         isChecked={lieferbar === 'true'}
                         onChange={() => setLieferbar("true")}
@@ -210,6 +239,7 @@ const Buchanlegen = () => {
                       </Checkbox>
                     </Stack>
                   </FormControl>
+                  </FormControl>
                 </Box>
               </Td>
             </Tr>
@@ -217,6 +247,21 @@ const Buchanlegen = () => {
               <Td>Preis</Td>
               <Td>
                 <Box maxW='300px'>
+                  <FormControl>
+                  <NumberInput
+                    defaultValue={15}
+                    precision={2}
+                    min={0}
+                    onChange={(valueString) => setPreisString(parsePreis(valueString))}
+                    value={formatPreis(preisString)}
+                  >
+                    <NumberInputField />
+                    <NumberInputStepper>
+                      <NumberIncrementStepper />
+                      <NumberDecrementStepper />
+                    </NumberInputStepper>
+                  </NumberInput>
+                </FormControl>
                 <FormControl>
                   <NumberInput
                     defaultValue={15}
@@ -258,27 +303,14 @@ const Buchanlegen = () => {
               </Td>
             </Tr>
             <Tr>
-              <Td>Datum</Td>
-              <Td>
-                <Box maxW='300px'>
-                <FormControl isInvalid={!datum}>
-                <input 
-                type="date" 
-                name="datum" 
-                value={datum}
-                max={today}
-                onChange={(valueString) => setDatum(valueString.target.value)} />
-                </FormControl>
-                </Box>
-              </Td>
-            </Tr>
-            <Tr>
               <Td>Homepage</Td>
               <Td>
                 <Box maxW='300px'>
                   <FormControl>
                     <Input
                       name="homepage"
+                      value={homepage}
+                      onChange={(e) => setHomepage(e.target.value)}
                       value={homepage}
                       onChange={(e) => setHomepage(e.target.value)}
                     />
