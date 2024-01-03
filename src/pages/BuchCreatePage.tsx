@@ -16,27 +16,29 @@ import {
   Radio,
   useToast
 } from '@chakra-ui/react';
+import axios from 'axios';
 import { useState } from 'react';
 
 const Buchanlegen = () => {
-  const [formData, setFormData] = useState({
-    titel: '',
-    isbn: '',
-    art: '1',
-    preis: '',
-    rabatt: '',
-    homepage: '',
-  });
-  
+  const [titel, setTitel] = useState('')
+  const [isbn, setIsbn] = useState('')
+  const [rating, setRating] = useState<number | null>(1)
+  const [art, setArt] = useState('')
+  const [lieferbar, setLieferbar] = useState<string>('true')
+  const [preisString, setPreisString] = useState<string>('10')
+  const [rabattString, setRabattString] = useState<string>('0')
+  const [homepage, setHomepage] = useState('')
+  const today = format(new Date(), 'yyyy-MM-dd')
+  const [datum, setDatum] = useState<string>(today)
+
+
+  const formatPreis = (val: string | number | null) => `€` + val
+  const parsePreis = (val: string) => val.replace(/^\€/, '')
+
   const toast = useToast();
-
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
+  
+  const handleArtChange = (value: string) => {
+    setArt(value);
   };
 
   const handleRadioChange = (value: string) => {
@@ -96,8 +98,8 @@ const Buchanlegen = () => {
                   <FormControl>
                     <Input
                       name="titel"
-                      value={formData.titel}
-                      onChange={handleInputChange}
+                      value={titel}
+                      onChange={(e) => setTitel(e.target.value)}
                     />
                   </FormControl>
                 </Box>
@@ -110,8 +112,8 @@ const Buchanlegen = () => {
                   <FormControl>
                     <Input
                       name="isbn"
-                      value={formData.isbn}
-                      onChange={handleInputChange}
+                      value={isbn}
+                      onChange={(e) => setIsbn(e.target.value)}
                     />
                   </FormControl>
                 </Box>
@@ -121,15 +123,24 @@ const Buchanlegen = () => {
               <Td>Buchart</Td>
               <Td>
                 <Box mb={4}>
-                  <RadioGroup
-                    value={formData.art}
-                    onChange={(value) => handleRadioChange(value.toString())}
-                  >
+                  <FormControl>
                     <Stack direction="row">
-                      <Radio value="1">Druckausgabe</Radio>
-                      <Radio value="2">Kindle</Radio>
+                      <Checkbox
+                        name="art"
+                        isChecked={art === 'DRUCKAUSGABE'}
+                        onChange={() => handleArtChange('DRUCKAUSGABE')}
+                      >
+                        Druckausgabe
+                      </Checkbox>
+                      <Checkbox
+                        name="isKindle"
+                        isChecked={art === 'KINDLE'}
+                        onChange={() => handleArtChange('KINDLE')}
+                      >
+                        Kindle
+                      </Checkbox>
                     </Stack>
-                  </RadioGroup>
+                  </FormControl>
                 </Box>
               </Td>
             </Tr>
@@ -138,12 +149,20 @@ const Buchanlegen = () => {
               <Td>
                 <Box maxW='300px'>
                   <FormControl>
-                    <Input
-                      name="preis"
-                      value={formData.preis}
-                      onChange={handleInputChange}
-                    />
-                  </FormControl>
+                  <NumberInput
+                    defaultValue={15}
+                    precision={2}
+                    min={0}
+                    onChange={(valueString) => setPreisString(parsePreis(valueString))}
+                    value={formatPreis(preisString)}
+                  >
+                    <NumberInputField />
+                    <NumberInputStepper>
+                      <NumberIncrementStepper />
+                      <NumberDecrementStepper />
+                    </NumberInputStepper>
+                  </NumberInput>
+                </FormControl>
                 </Box>
               </Td>
             </Tr>
@@ -151,13 +170,21 @@ const Buchanlegen = () => {
               <Td>Rabatt</Td>
               <Td>
                 <Box maxW='300px'>
-                  <FormControl>
-                    <Input
-                      name="rabatt"
-                      value={formData.rabatt}
-                      onChange={handleInputChange}
-                    />
-                  </FormControl>
+                <FormControl>
+                <NumberInput
+                  defaultValue={0}
+                  min={0}
+                  max={1}
+                  step={0.10}
+                  onChange={(valueString) => setRabattString(valueString)}
+                  value={rabattString}>
+                  <NumberInputField />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+                </FormControl>
                 </Box>
               </Td>
             </Tr>
@@ -168,8 +195,8 @@ const Buchanlegen = () => {
                   <FormControl>
                     <Input
                       name="homepage"
-                      value={formData.homepage}
-                      onChange={handleInputChange}
+                      value={homepage}
+                      onChange={(e) => setHomepage(e.target.value)}
                     />
                   </FormControl>
                 </Box>
