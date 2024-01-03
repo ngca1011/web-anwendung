@@ -51,11 +51,25 @@ const Buchanlegen = () => {
     setArt(value);
   };
 
-  const handleRadioChange = (value: string) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      art: value,
-    }));
+  const payload = {
+    isbn: isbn,
+    rating: rating,
+    art: art,
+    preis: parseFloat(preisString),
+    rabatt: parseFloat(rabattString),
+    lieferbar: true,  
+    datum: datum,
+    homepage: homepage,
+    schlagwoerter: [],  
+    titel: {
+      titel: titel,
+      untertitel: '', 
+    },
+    _links: {
+      self: {
+        href: '',
+      },
+    },
   };
 
   const handleBuchAnlegen = async () => {
