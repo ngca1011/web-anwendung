@@ -23,6 +23,17 @@ import {
   NumberInputStepper,
   NumberIncrementStepper,
   NumberDecrementStepper,
+  useToast,
+  Checkbox,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { useState } from 'react';
@@ -210,20 +221,6 @@ const Buchanlegen = () => {
                   <FormControl>
                     <Stack direction="row">
                       <Checkbox
-                        name="art"
-                        isChecked={art === 'DRUCKAUSGABE'}
-                        onChange={() => handleArtChange('DRUCKAUSGABE')}
-                      >
-                        Druckausgabe
-                      </Checkbox>
-                      <Checkbox
-                        name="isKindle"
-                        isChecked={art === 'KINDLE'}
-                        onChange={() => handleArtChange('KINDLE')}
-                      >
-                        Kindle
-                      </Checkbox>
-                      <Checkbox
                         name="lieferbar"
                         isChecked={lieferbar === 'true'}
                         onChange={() => setLieferbar("true")}
@@ -238,7 +235,6 @@ const Buchanlegen = () => {
                         Nein
                       </Checkbox>
                     </Stack>
-                  </FormControl>
                   </FormControl>
                 </Box>
               </Td>
@@ -298,6 +294,21 @@ const Buchanlegen = () => {
                     <NumberDecrementStepper />
                   </NumberInputStepper>
                 </NumberInput>
+                </FormControl>
+                </Box>
+              </Td>
+            </Tr>
+            <Tr>
+              <Td>Datum</Td>
+              <Td>
+                <Box maxW='300px'>
+                <FormControl isInvalid={!datum}>
+                <input 
+                type="date" 
+                name="datum" 
+                value={datum}
+                max={today}
+                onChange={(valueString) => setDatum(valueString.target.value)} />
                 </FormControl>
                 </Box>
               </Td>
