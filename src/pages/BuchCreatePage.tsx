@@ -62,16 +62,6 @@ const Buchanlegen = () => {
     setArt(value);
   };
 
-  const handleRadioChange = (value: string) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      art: value,
-    }));
-  
-  const handleArtChange = (value: string) => {
-    setArt(value);
-  };
-
   const payload = {
     isbn: isbn,
     rating: rating,
