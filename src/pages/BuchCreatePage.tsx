@@ -11,13 +11,23 @@ import {
   FormControl,
   Input,
   Button,
-  RadioGroup,
   Stack,
-  Radio,
-  useToast
+  useToast,
+  Checkbox,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { useState } from 'react';
+import 'react-datepicker/dist/react-datepicker.css';
+import { format } from 'date-fns';
 
 const Buchanlegen = () => {
   const [titel, setTitel] = useState('')
@@ -145,10 +155,57 @@ const Buchanlegen = () => {
               </Td>
             </Tr>
             <Tr>
+              <Td>Rating</Td>
+              <Td>
+                <Box maxW='300px'>
+                  <Menu>
+                    <MenuButton as={Button}>{rating ?? 'Choose'}</MenuButton>
+                    <MenuList>
+                      {[1, 2, 3, 4, 5].map((value) => (
+                        <MenuItem
+                          key={value}
+                          onClick={() => {
+                            setRating(value)
+                          }}
+                        >
+                          {value}
+                        </MenuItem>
+                      ))}
+                    </MenuList>
+                  </Menu>
+                </Box>
+              </Td>
+            </Tr>
+            <Tr>
+              <Td>Lieferbar</Td>
+              <Td>
+                <Box mb={4}>
+                  <FormControl>
+                    <Stack direction="row">
+                      <Checkbox
+                        name="lieferbar"
+                        isChecked={lieferbar === 'true'}
+                        onChange={() => setLieferbar("true")}
+                      >
+                        Ja
+                      </Checkbox>
+                      <Checkbox
+                        name="lieferbar"
+                        isChecked={lieferbar === 'false'}
+                        onChange={() => setLieferbar("false")}
+                      >
+                        Nein
+                      </Checkbox>
+                    </Stack>
+                  </FormControl>
+                </Box>
+              </Td>
+            </Tr>
+            <Tr>
               <Td>Preis</Td>
               <Td>
                 <Box maxW='300px'>
-                  <FormControl>
+                <FormControl>
                   <NumberInput
                     defaultValue={15}
                     precision={2}
@@ -184,6 +241,21 @@ const Buchanlegen = () => {
                     <NumberDecrementStepper />
                   </NumberInputStepper>
                 </NumberInput>
+                </FormControl>
+                </Box>
+              </Td>
+            </Tr>
+            <Tr>
+              <Td>Datum</Td>
+              <Td>
+                <Box maxW='300px'>
+                <FormControl isInvalid={!datum}>
+                <input 
+                type="date" 
+                name="datum" 
+                value={datum}
+                max={today}
+                onChange={(valueString) => setDatum(valueString.target.value)} />
                 </FormControl>
                 </Box>
               </Td>
