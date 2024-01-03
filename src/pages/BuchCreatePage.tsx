@@ -74,13 +74,11 @@ const Buchanlegen = () => {
 
   const handleBuchAnlegen = async () => {
     try {
-      const token = localStorage.getItem('token'); 
-  
+      const token = localStorage.getItem('token');
       const headers = {
         Authorization: `Bearer ${token}`,
       };
-
-      await axios.post('https://localhost:3000/rest', formData, {headers}); 
+      await axios.post('https://localhost:3000/rest', payload, { headers });
       toast({
         title: 'Erfolgreich',
         description: 'Buch erfolgreich angelegt',
