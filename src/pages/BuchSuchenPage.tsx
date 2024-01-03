@@ -14,6 +14,7 @@ import {
   Thead,
   Tbody,
   Modal,
+  SimpleGrid,
   ModalOverlay,
   ModalContent,
   ModalHeader,
@@ -45,6 +46,13 @@ const Buchsuchen = () => {
   const [buchArtChecked, setBuchArtChecked] = useState(false)
   const [lieferbarValue, setLieferbarValue] = useState<string>('') // Neue State-Variable für Lieferbar
   const [selectedBook, setSelectedBook] = useState<Book | null>(null) // Zustand für ausgewähltes Buch
+
+  const commonBoxStyles = {
+    borderWidth: '1px',
+    borderRadius: 'md',
+    overflow: 'hidden',
+    boxShadow: 'md',
+  }
 
   const [fetchedData, setFetchedData] = useState<FetchedData>({ _embedded: { buecher: [] } })
   useEffect(() => {
@@ -135,124 +143,121 @@ const Buchsuchen = () => {
         backgroundColor: 'white',
       }}
     >
-      <TableContainer>
-        <Table variant='simple'>
-          <Thead>
-            <Tr>
-              <Th>Kriterium</Th>
-              <Th>Anpassen</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            <Tr>
-              <Td>Titel</Td>
-              <Td>
-                <Box mb={4} maxW='300px'>
-                  <FormControl>
-                    <Input
-                      value={titelValue}
-                      onChange={(event) => {
-                        setTitelValue(event.target.value)
-                      }}
-                      placeholder='Titel eingeben'
-                    />
-                  </FormControl>
-                </Box>
-              </Td>
-            </Tr>
-            <Tr>
-              <Td>ISBN Number</Td>
-              <Td>
-                <Box mb={4} maxW='300px'>
-                  <FormControl>
-                    <Input
-                      value={isbnValue}
-                      onChange={(event) => {
-                        setIsbnValue(event.target.value)
-                      }}
-                    />
-                    <FormHelperText>Example: 9780131969452</FormHelperText>
-                  </FormControl>
-                </Box>
-              </Td>
-            </Tr>
-            <Tr>
-              <Td>Rating</Td>
-              <Td>
-                <Box maxW='300px'>
-                  <Menu>
-                    <MenuButton as={Button}>{ratingValue ?? 'Choose'}</MenuButton>
-                    <MenuList>
-                      {[1, 2, 3, 4, 5].map((value) => (
-                        <MenuItem
-                          key={value}
-                          onClick={() => {
-                            setRatingValue(value)
-                          }}
-                        >
-                          {value}
-                        </MenuItem>
-                      ))}
-                    </MenuList>
-                  </Menu>
-                </Box>
-              </Td>
-            </Tr>
+      <SimpleGrid columns={2} spacing={4} width='800px' margin='auto'>
+        <Box style={commonBoxStyles}>
+          <Box padding={4} borderRightWidth={1} fontWeight='bold'>
+            Titel
+          </Box>
 
-            <Tr>
-              <Td>Buchart</Td>
-              <Td>
-                <Box mb={4}>
-                  <Stack spacing={5} direction='row'>
-                    {/* Checkbox für Druckausgabe 1 */}
-                    <Checkbox
-                      colorScheme='blue'
-                      defaultChecked={druckausgabeChecked}
-                      onChange={(e) => {
-                        setDruckausgabeChecked(e.target.checked)
-                      }}
-                    >
-                      Druckausgabe
-                    </Checkbox>
+          <Box padding='4'>
+            <FormControl>
+              <Input
+                value={titelValue}
+                onChange={(event) => {
+                  setTitelValue(event.target.value)
+                }}
+                placeholder='Titel eingeben'
+              />
+            </FormControl>{' '}
+          </Box>
+        </Box>
 
-                    {/* Checkbox für Druckausgabe 2 */}
-                    <Checkbox
-                      colorScheme='blue'
-                      defaultChecked={kindleChecked}
-                      onChange={(e) => {
-                        setKindleChecked(e.target.checked)
-                      }}
-                    >
-                      Kindle
-                    </Checkbox>
-                  </Stack>
-                </Box>
-              </Td>
-            </Tr>
-            <Tr>
-              <Td>Lieferbar</Td>
-              <Td>
-                <RadioGroup
-                  value={lieferbarValue}
-                  onChange={(value) => {
-                    setLieferbarValue(value)
-                  }}
-                >
-                  <Stack spacing={5} direction='row'>
-                    <Radio colorScheme='blue' value='Ja'>
-                      Ja
-                    </Radio>
-                    <Radio colorScheme='blue' value='Nein'>
-                      Nein
-                    </Radio>
-                  </Stack>
-                </RadioGroup>
-              </Td>
-            </Tr>
-            <Box mb={4}></Box>
-          </Tbody>
-        </Table>
-      </TableContainer>
+        <Box style={commonBoxStyles}>
+          <Box padding={4} borderRightWidth={1} fontWeight='bold'>
+            ISBN Number
+          </Box>
+
+          <Box padding='4'>
+            <FormControl>
+              <Input
+                value={isbnValue}
+                onChange={(event) => {
+                  setIsbnValue(event.target.value)
+                }}
+              />
+              <FormHelperText>Example: 9780131969452</FormHelperText>
+            </FormControl>{' '}
+          </Box>
+        </Box>
+
+        <Box style={commonBoxStyles}>
+          <Box padding={4} borderRightWidth={1} fontWeight='bold'>
+            Rating
+          </Box>
+
+          <Box padding='4'>
+            <Menu>
+              <MenuButton as={Button}>{ratingValue ?? 'Choose'}</MenuButton>
+              <MenuList>
+                {[1, 2, 3, 4, 5].map((value) => (
+                  <MenuItem
+                    key={value}
+                    onClick={() => {
+                      setRatingValue(value)
+                    }}
+                  >
+                    {value}
+                  </MenuItem>
+                ))}
+              </MenuList>
+            </Menu>{' '}
+          </Box>
+        </Box>
+
+        <Box style={commonBoxStyles}>
+          <Box padding={4} borderRightWidth={1} fontWeight='bold'>
+            Buchart
+          </Box>
+
+          <Box padding='4'>
+            <Stack spacing={5} direction='row'>
+              <Checkbox
+                colorScheme='blue'
+                defaultChecked={druckausgabeChecked}
+                onChange={(e) => {
+                  setDruckausgabeChecked(e.target.checked)
+                }}
+              >
+                Druckausgabe
+              </Checkbox>
+
+              <Checkbox
+                colorScheme='blue'
+                defaultChecked={kindleChecked}
+                onChange={(e) => {
+                  setKindleChecked(e.target.checked)
+                }}
+              >
+                Kindle
+              </Checkbox>
+            </Stack>{' '}
+          </Box>
+        </Box>
+
+        <Box style={commonBoxStyles}>
+          <Box padding={4} borderRightWidth={1} fontWeight='bold'>
+            Lieferbar
+          </Box>
+
+          <Box padding='4'>
+            <RadioGroup
+              value={lieferbarValue}
+              onChange={(value) => {
+                setLieferbarValue(value)
+              }}
+            >
+              <Stack spacing={5} direction='row'>
+                <Radio colorScheme='blue' value='Ja'>
+                  Ja
+                </Radio>
+                <Radio colorScheme='blue' value='Nein'>
+                  Nein
+                </Radio>
+              </Stack>
+            </RadioGroup>{' '}
+          </Box>
+        </Box>
+      </SimpleGrid>
 
       <Box display='flex' justifyContent='center' alignItems='center' marginBottom='4'>
         <Button
