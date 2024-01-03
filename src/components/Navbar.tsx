@@ -1,6 +1,6 @@
 import { Box, Flex, Icon, Link, Spacer } from '@chakra-ui/react'
 import { MdPerson } from 'react-icons/md'
-import { useAuthContext } from './Auth.tsx'
+import { useAuthContext } from '../components/Auth.tsx'
 
 const Navigation = () => {
   const { isLoggedIn } = useAuthContext()
@@ -18,10 +18,7 @@ const Navigation = () => {
     >
       <Box>
         <Link href='/' fontSize='xl' fontWeight='bold'>
-          <a href='https://www.h-ka.de/'>
-            <img src='..\public\logo.png' alt='H-KA' width='330' />
-          </a>
-          Home
+          LOGO
         </Link>
       </Box>
 
