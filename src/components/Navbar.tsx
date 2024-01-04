@@ -1,6 +1,6 @@
 import { Box, Flex, Icon, Link, Spacer } from '@chakra-ui/react'
 import { MdPerson } from 'react-icons/md'
-import { useAuthContext } from '../components/Auth.tsx'
+import { useAuthContext } from './auth.tsx'
 import { FiBook } from 'react-icons/fi'
 
 const Navigation = () => {

@@ -4,7 +4,7 @@ import { useToast } from '@chakra-ui/react'
 
 const AuthContext = createContext({
   isLoggedIn: false,
-  login: (_username: string, _password: string) => {},
+  login: async (_username: string, _password: string) => {},
   logout: () => {},
 })
 
@@ -32,9 +32,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.log(token)
 
       setIsLoggedIn(true)
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       localStorage.setItem('token', token)
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       localStorage.setItem('roles', roles)
 
       toast({
@@ -65,7 +63,6 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   }
 
   return (
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     <AuthContext.Provider value={{ isLoggedIn, login, logout }}>{children}</AuthContext.Provider>
   )
 }
