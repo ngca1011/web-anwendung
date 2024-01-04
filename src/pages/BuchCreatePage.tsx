@@ -92,6 +92,16 @@ const Buchanlegen = () => {
     }
   }
 
+  const handleTitelChange = (value: string) => {
+    setTitel(value)
+
+    if (value !== '') {
+      setTitelError('')
+    } else {
+      setTitelError(emptyTitelMessage)
+    }
+  }
+
   const handleIsbnChange = (isbn: string) => {
     setIsbn(isbn)
     if (!isValidISBN(isbn)) {
@@ -184,7 +194,7 @@ const Buchanlegen = () => {
                       name='titel'
                       value={titel}
                       onChange={(e) => {
-                        setTitel(e.target.value)
+                        handleTitelChange(e.target.value)
                       }}
                     />
                     <FormErrorMessage>{titelError}</FormErrorMessage>
