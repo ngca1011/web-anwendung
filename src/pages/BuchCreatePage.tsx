@@ -23,11 +23,11 @@ import {
   NumberInputStepper,
   NumberIncrementStepper,
   NumberDecrementStepper,
-} from '@chakra-ui/react';
-import axios from 'axios';
-import { useState } from 'react';
-import 'react-datepicker/dist/react-datepicker.css';
-import { format } from 'date-fns';
+} from '@chakra-ui/react'
+import axios from 'axios'
+import { useState } from 'react'
+import 'react-datepicker/dist/react-datepicker.css'
+import { format } from 'date-fns'
 
 const Buchanlegen = () => {
   const [titel, setTitel] = useState('')
@@ -41,15 +41,14 @@ const Buchanlegen = () => {
   const today = format(new Date(), 'yyyy-MM-dd')
   const [datum, setDatum] = useState<string>(today)
 
-
   const formatPreis = (val: string | number | null) => `€` + val
   const parsePreis = (val: string) => val.replace(/^€/, '')
 
-  const toast = useToast();
-  
+  const toast = useToast()
+
   const handleArtChange = (value: string) => {
-    setArt(value);
-  };
+    setArt(value)
+  }
 
   const payload = {
     isbn,
@@ -57,38 +56,38 @@ const Buchanlegen = () => {
     art,
     preis: parseFloat(preisString),
     rabatt: parseFloat(rabattString),
-    lieferbar: true,  
+    lieferbar: true,
     datum,
     homepage,
-    schlagwoerter: [],  
+    schlagwoerter: [],
     titel: {
       titel,
-      untertitel: '', 
+      untertitel: '',
     },
     _links: {
       self: {
         href: '',
       },
     },
-  };
+  }
 
   const handleBuchAnlegen = () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token')
       const headers = {
         Authorization: `Bearer ${token}`,
-      };
-  
+      }
+
       void (async () => {
         try {
-          await axios.post('https://localhost:3000/rest', payload, { headers });
+          await axios.post('https://localhost:3000/rest', payload, { headers })
           toast({
             title: 'Erfolgreich',
             description: 'Buch erfolgreich angelegt',
             status: 'success',
             duration: 5000,
             isClosable: true,
-          });
+          })
         } catch (error) {
           console.log(error)
           toast({
@@ -97,14 +96,13 @@ const Buchanlegen = () => {
             status: 'error',
             duration: 5000,
             isClosable: true,
-          });
+          })
         }
-      })();
+      })()
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  };
-  
+  }
 
   return (
     <div
@@ -128,9 +126,11 @@ const Buchanlegen = () => {
                 <Box maxW='300px'>
                   <FormControl>
                     <Input
-                      name="titel"
+                      name='titel'
                       value={titel}
-                      onChange={(e) => { setTitel(e.target.value); }}
+                      onChange={(e) => {
+                        setTitel(e.target.value)
+                      }}
                     />
                   </FormControl>
                 </Box>
@@ -142,9 +142,11 @@ const Buchanlegen = () => {
                 <Box maxW='300px'>
                   <FormControl>
                     <Input
-                      name="isbn"
+                      name='isbn'
                       value={isbn}
-                      onChange={(e) => { setIsbn(e.target.value); }}
+                      onChange={(e) => {
+                        setIsbn(e.target.value)
+                      }}
                     />
                   </FormControl>
                 </Box>
@@ -155,18 +157,22 @@ const Buchanlegen = () => {
               <Td>
                 <Box mb={4}>
                   <FormControl>
-                    <Stack direction="row">
+                    <Stack direction='row'>
                       <Checkbox
-                        name="art"
+                        name='art'
                         isChecked={art === 'DRUCKAUSGABE'}
-                        onChange={() => { handleArtChange('DRUCKAUSGABE'); }}
+                        onChange={() => {
+                          handleArtChange('DRUCKAUSGABE')
+                        }}
                       >
                         Druckausgabe
                       </Checkbox>
                       <Checkbox
-                        name="isKindle"
+                        name='isKindle'
                         isChecked={art === 'KINDLE'}
-                        onChange={() => { handleArtChange('KINDLE'); }}
+                        onChange={() => {
+                          handleArtChange('KINDLE')
+                        }}
                       >
                         Kindle
                       </Checkbox>
@@ -202,18 +208,22 @@ const Buchanlegen = () => {
               <Td>
                 <Box mb={4}>
                   <FormControl>
-                    <Stack direction="row">
+                    <Stack direction='row'>
                       <Checkbox
-                        name="lieferbar"
+                        name='lieferbar'
                         isChecked={lieferbar === 'true'}
-                        onChange={() => { setLieferbar("true"); }}
+                        onChange={() => {
+                          setLieferbar('true')
+                        }}
                       >
                         Ja
                       </Checkbox>
                       <Checkbox
-                        name="lieferbar"
+                        name='lieferbar'
                         isChecked={lieferbar === 'false'}
-                        onChange={() => { setLieferbar("false"); }}
+                        onChange={() => {
+                          setLieferbar('false')
+                        }}
                       >
                         Nein
                       </Checkbox>
@@ -227,20 +237,22 @@ const Buchanlegen = () => {
               <Td>
                 <Box maxW='300px'>
                   <FormControl>
-                  <NumberInput
-                    defaultValue={15}
-                    precision={2}
-                    min={0}
-                    onChange={(valueString) => { setPreisString(parsePreis(valueString)); }}
-                    value={formatPreis(preisString)}
-                  >
-                    <NumberInputField />
-                    <NumberInputStepper>
-                      <NumberIncrementStepper />
-                      <NumberDecrementStepper />
-                    </NumberInputStepper>
-                  </NumberInput>
-                </FormControl>
+                    <NumberInput
+                      defaultValue={15}
+                      precision={2}
+                      min={0}
+                      onChange={(valueString) => {
+                        setPreisString(parsePreis(valueString))
+                      }}
+                      value={formatPreis(preisString)}
+                    >
+                      <NumberInputField />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
+                    </NumberInput>
+                  </FormControl>
                 </Box>
               </Td>
             </Tr>
@@ -248,21 +260,24 @@ const Buchanlegen = () => {
               <Td>Rabatt</Td>
               <Td>
                 <Box maxW='300px'>
-                <FormControl>
-                <NumberInput
-                  defaultValue={0}
-                  min={0}
-                  max={1}
-                  step={0.10}
-                  onChange={(valueString) => { setRabattString(valueString); }}
-                  value={rabattString}>
-                  <NumberInputField />
-                  <NumberInputStepper>
-                    <NumberIncrementStepper />
-                    <NumberDecrementStepper />
-                  </NumberInputStepper>
-                </NumberInput>
-                </FormControl>
+                  <FormControl>
+                    <NumberInput
+                      defaultValue={0}
+                      min={0}
+                      max={1}
+                      step={0.1}
+                      onChange={(valueString) => {
+                        setRabattString(valueString)
+                      }}
+                      value={rabattString}
+                    >
+                      <NumberInputField />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
+                    </NumberInput>
+                  </FormControl>
                 </Box>
               </Td>
             </Tr>
@@ -270,14 +285,17 @@ const Buchanlegen = () => {
               <Td>Datum</Td>
               <Td>
                 <Box maxW='300px'>
-                <FormControl>
-                <input 
-                type="date" 
-                name="datum" 
-                value={datum}
-                max={today}
-                onChange={(valueString) => { setDatum(valueString.target.value); }} />
-                </FormControl>
+                  <FormControl>
+                    <input
+                      type='date'
+                      name='datum'
+                      value={datum}
+                      max={today}
+                      onChange={(valueString) => {
+                        setDatum(valueString.target.value)
+                      }}
+                    />
+                  </FormControl>
                 </Box>
               </Td>
             </Tr>
@@ -287,9 +305,11 @@ const Buchanlegen = () => {
                 <Box maxW='300px'>
                   <FormControl>
                     <Input
-                      name="homepage"
+                      name='homepage'
                       value={homepage}
-                      onChange={(e) => { setHomepage(e.target.value); }}
+                      onChange={(e) => {
+                        setHomepage(e.target.value)
+                      }}
                     />
                   </FormControl>
                 </Box>
@@ -300,8 +320,12 @@ const Buchanlegen = () => {
         </Table>
       </TableContainer>
 
-      <Box display="flex" justifyContent="center" alignItems="center" marginBottom="4">
-        <Button onClick={ () => { handleBuchAnlegen(); }}>
+      <Box display='flex' justifyContent='center' alignItems='center' marginBottom='4'>
+        <Button
+          onClick={() => {
+            handleBuchAnlegen()
+          }}
+        >
           Buch anlegen
         </Button>
       </Box>
