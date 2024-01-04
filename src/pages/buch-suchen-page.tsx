@@ -1,9 +1,11 @@
+import { isValidISBN } from '../utils/validation'
+import { API_URL, invalidISBNMessage } from '../consts'
 import { useState, useEffect } from 'react'
+import type { ReactElement } from 'react'
 import axios from 'axios'
 import type { Book, FetchedData } from '../types/interfaces'
 
 import {
-  FormHelperText,
   Input,
   Checkbox,
   Stack,
@@ -33,9 +35,10 @@ import {
   Button,
   Box,
   useToast,
+  FormErrorMessage,
 } from '@chakra-ui/react'
 
-const Buchsuchen = () => {
+const Buchsuchen = (): ReactElement => {
   const toast = useToast()
   const [titelValue, setTitelValue] = useState('')
   const [isbnValue, setIsbnValue] = useState('')
@@ -46,6 +49,7 @@ const Buchsuchen = () => {
   const [buchArtChecked, setBuchArtChecked] = useState(false)
   const [lieferbarValue, setLieferbarValue] = useState<string>('') // Neue State-Variable für Lieferbar
   const [selectedBook, setSelectedBook] = useState<Book | null>() // Zustand für ausgewähltes Buch
+  const [isbnError, setIsbnError] = useState('')
 
   const commonBoxStyles = {
     borderWidth: '1px',
@@ -54,31 +58,42 @@ const Buchsuchen = () => {
     boxShadow: 'md',
   }
 
+  const handleIsbnChange = (isbn: string): void => {
+    setIsbnValue(isbn)
+    if (isValidISBN(isbn) || isbn === '') {
+      setIsbnError('')
+    } else {
+      setIsbnError(invalidISBNMessage)
+    }
+  }
+
   const [fetchedData, setFetchedData] = useState<FetchedData>({ _embedded: { buecher: [] } })
-  let apiUrl = 'https://localhost:3000/rest?'
 
-  if (titelValue.trim() !== '') {
-    apiUrl += `titel=${titelValue}`
-  }
-  if (isbnValue.trim() !== '') {
-    apiUrl += `&isbn=${isbnValue}`
-  }
-  if (ratingValue !== null && ratingValue !== undefined) {
-    apiUrl += `&rating=${ratingValue}`
-  }
-  if (druckausgabeChecked && !kindleChecked) {
-    apiUrl += '&art=DRUCKAUSGABE'
-    setBuchArtChecked(true)
-  } else if (kindleChecked && !druckausgabeChecked) {
-    apiUrl += '&art=KINDLE'
-    setBuchArtChecked(true)
-  }
-  if (lieferbarValue !== '') {
-    apiUrl += `&lieferbar=${lieferbarValue === 'Ja' ? 'true' : 'false'}`
-  }
-
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   useEffect(() => {
-    const fetchDataFromApi = async () => {
+    let apiUrl = `${API_URL}rest?`
+
+    if (titelValue.trim() !== '') {
+      apiUrl += `titel=${titelValue}`
+    }
+    if (isbnValue.trim() !== '') {
+      apiUrl += `&isbn=${isbnValue}`
+    }
+    if (ratingValue !== null && ratingValue !== undefined) {
+      apiUrl += `&rating=${ratingValue}`
+    }
+    if (druckausgabeChecked && !kindleChecked) {
+      apiUrl += '&art=DRUCKAUSGABE'
+      setBuchArtChecked(true)
+    } else if (kindleChecked && !druckausgabeChecked) {
+      apiUrl += '&art=KINDLE'
+      setBuchArtChecked(true)
+    }
+    if (lieferbarValue !== '') {
+      apiUrl += `&lieferbar=${lieferbarValue === 'Ja'}`
+    }
+
+    const fetchDataFromApi = async (): Promise<404 | 200 | 500> => {
       try {
         const response = await axios.get(apiUrl)
         if (response.data._embedded.buecher.length === 0) {
@@ -101,24 +116,18 @@ const Buchsuchen = () => {
             title: 'Erfolgreich',
             description: 'Buch gefunden',
             status: 'success',
-            duration: 3000,
-            isClosable: true,
           })
         } else if (status === 404) {
           toast({
             title: 'Info',
             description: 'Kein Buch gefunden',
             status: 'info',
-            duration: 3000,
-            isClosable: true,
           })
         } else {
           toast({
             title: 'Fehler',
             description: 'Suche konnte nicht durchgeführt werden',
             status: 'error',
-            duration: 3000,
-            isClosable: true,
           })
         }
 
@@ -167,15 +176,16 @@ const Buchsuchen = () => {
           </Box>
 
           <Box padding='4'>
-            <FormControl>
+            <FormControl isInvalid={isbnError !== ''}>
               <Input
+                name='isbn'
                 value={isbnValue}
-                onChange={(event) => {
-                  setIsbnValue(event.target.value)
+                onChange={(input): void => {
+                  handleIsbnChange(input.target.value)
                 }}
               />
-              <FormHelperText>Example: 9780131969452</FormHelperText>
-            </FormControl>{' '}
+              <FormErrorMessage>{isbnError}</FormErrorMessage>
+            </FormControl>
           </Box>
         </Box>
 
@@ -280,8 +290,6 @@ const Buchsuchen = () => {
                 title: 'Achtung',
                 description: 'Bitte geben Sie einen Titel oder eine ISBN für die Suche ein.',
                 status: 'warning',
-                duration: 3000,
-                isClosable: true,
               })
             }
           }}
@@ -371,4 +379,4 @@ const Buchsuchen = () => {
   )
 }
 
-export default Buchsuchen
+export { Buchsuchen }

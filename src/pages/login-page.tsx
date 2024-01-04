@@ -1,19 +1,20 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { useState } from 'react'
+import type { ReactElement } from 'react'
 import { Center, Box, Heading, Button, Input } from '@chakra-ui/react'
 import { useAuthContext } from '../components/auth'
 
-const Login = () => {
+const Login = (): ReactElement => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const { isLoggedIn, login, logout } = useAuthContext()
 
-  const handleLogin = async () => {
+  const handleLogin = async (): Promise<void> => {
     await login(username, password)
   }
 
-  const handleLogout = () => {
+  const handleLogout = (): void => {
     logout()
   }
 
@@ -74,4 +75,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export { Login }

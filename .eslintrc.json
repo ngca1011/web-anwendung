@@ -1,53 +1,50 @@
 {
-    "env": {
-      "browser": true,
-      "es2021": true
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "standard-with-typescript",
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended",
+    "plugin:array-func/recommended",
+    "plugin:eslint-comments/recommended",
+    "plugin:import/recommended",
+    "plugin:no-use-extend-native/recommended",
+    "plugin:promise/recommended",
+    "plugin:sonarjs/recommended",
+    "plugin:unicorn/recommended"
+  ],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "project": "./tsconfig.json",
+    "tsconfigRootDir": "./"
+  },
+  "plugins": [
+    "react",
+    "react-hooks",
+    "@typescript-eslint",
+    "prettier",
+    "eslint-plugin-array-func",
+    "eslint-plugin-eslint-comments",
+    "eslint-plugin-import",
+    "eslint-plugin-no-use-extend-native",
+    "eslint-plugin-promise",
+    "eslint-plugin-sonarjs",
+    "eslint-plugin-unicorn"
+  ],
+  "rules": {
+    "react/react-in-jsx-scope": "off"
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
     },
-    "extends": [
-      "standard-with-typescript",
-      "eslint:recommended",
-      "plugin:react/recommended",
-      "plugin:@typescript-eslint/recommended",
-      "plugin:prettier/recommended",
-      "plugin:array-func/recommended",
-      "plugin:eslint-comments/recommended",
-      "plugin:import/recommended",
-      "plugin:no-use-extend-native/recommended",
-      "plugin:promise/recommended",
-      "plugin:sonarjs/recommended",
-      "plugin:unicorn/recommended"
-    ],
-    "parserOptions": {
-      "ecmaVersion": "latest",
-      "sourceType": "module",
-      "project": "./tsconfig.json",
-      "tsconfigRootDir": "./"
-    },
-    "plugins": [
-        "react",
-        "react-hooks",
-        "@typescript-eslint",
-        "prettier",
-        "eslint-plugin-array-func",
-        "eslint-plugin-eslint-comments",
-        "eslint-plugin-import",
-        "eslint-plugin-no-use-extend-native",
-        "eslint-plugin-promise",
-        "eslint-plugin-sonarjs",
-        "eslint-plugin-unicorn"
-    ],      
-    "rules": {
-      "@typescript-eslint/explicit-function-return-type": "off",
-      "react/react-in-jsx-scope": "off",
-      "@typescript-eslint/no-unsafe-argument": "off"
-    },
-    "settings": {
-      "import/resolver": {
-        "typescript": {}
-      },
-      "react": {
-        "version": "18.2.0"
-      }
+    "react": {
+      "version": "18.2.0"
     }
   }
-  
+}

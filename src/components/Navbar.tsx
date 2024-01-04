@@ -2,8 +2,9 @@ import { Box, Flex, Icon, Link, Spacer } from '@chakra-ui/react'
 import { MdPerson } from 'react-icons/md'
 import { useAuthContext } from './auth.tsx'
 import { FiBook } from 'react-icons/fi'
+import type { ReactElement } from 'react'
 
-const Navigation = () => {
+const Navigation = (): ReactElement => {
   const { isLoggedIn } = useAuthContext()
 
   return (
@@ -49,4 +50,4 @@ const Navigation = () => {
   )
 }
 
-export default Navigation
+export { Navigation }
