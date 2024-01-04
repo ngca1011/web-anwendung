@@ -23,6 +23,7 @@ import {
   NumberInputStepper,
   NumberIncrementStepper,
   NumberDecrementStepper,
+  FormErrorMessage,
 } from '@chakra-ui/react'
 import axios from 'axios'
 import { useState } from 'react'
@@ -40,6 +41,7 @@ const Buchanlegen = () => {
   const [homepage, setHomepage] = useState('')
   const today = format(new Date(), 'yyyy-MM-dd')
   const [datum, setDatum] = useState<string>(today)
+  const [isbnError, setIsbnError] = useState('')
 
   const formatPreis = (val: string | number | null) => `€` + val
   const parsePreis = (val: string) => val.replace(/^€/, '')
@@ -69,6 +71,21 @@ const Buchanlegen = () => {
         href: '',
       },
     },
+  }
+
+  const isValidISBN = (isbn: string) => {
+    const isbnPattern = /^\d{3}-\d{1}-\d{5}-\d{3}-\d{1}$/
+    console.log(isbnPattern.test(isbn))
+    return isbnPattern.test(isbn)
+  }
+
+  const handleIsbnChange = (isbn: string) => {
+    setIsbn(isbn)
+    if (!isValidISBN(isbn)) {
+      setIsbnError('ungültiges ISBN-Format')
+    } else {
+      setIsbnError('')
+    }
   }
 
   const handleBuchAnlegen = () => {
@@ -140,14 +157,15 @@ const Buchanlegen = () => {
               <Td>ISBN Nummer</Td>
               <Td>
                 <Box maxW='300px'>
-                  <FormControl>
+                  <FormControl isInvalid={!(isbnError === '')}>
                     <Input
                       name='isbn'
                       value={isbn}
                       onChange={(e) => {
-                        setIsbn(e.target.value)
+                        handleIsbnChange(e.target.value)
                       }}
                     />
+                    <FormErrorMessage>{isbnError}</FormErrorMessage>
                   </FormControl>
                 </Box>
               </Td>
