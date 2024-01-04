@@ -45,6 +45,10 @@ const Buchanlegen = () => {
   const [isbnError, setIsbnError] = useState('')
   const [homepageError, setHomepageError] = useState('')
 
+  const invalidISBNMessage = 'Ungültiges ISBN-Format'
+  const invalidHomepageMessage = 'Ungültige Homepage URL'
+  const invalidInputuDataMessage = 'ungültige Eingabedaten'
+
   const formatPreis = (val: string | number | null) => `€` + val
   const parsePreis = (val: string) => val.replace(/^€/, '')
 
@@ -81,14 +85,14 @@ const Buchanlegen = () => {
     if (isValidHomepage(value)) {
       setHomepageError('')
     } else {
-      setHomepageError('ungültige Homepage URL')
+      setHomepageError(invalidHomepageMessage)
     }
   }
 
   const handleIsbnChange = (isbn: string) => {
     setIsbn(isbn)
     if (!isValidISBN(isbn)) {
-      setIsbnError('ungültiges ISBN-Format')
+      setIsbnError(invalidISBNMessage)
     } else {
       setIsbnError('')
     }
@@ -106,27 +110,21 @@ const Buchanlegen = () => {
           let invalidData = false
           if (!isValidISBN(isbn)) {
             invalidData = true
-            setIsbnError('Ungültiges ISBN-Format')
+            setIsbnError(invalidISBNMessage)
           }
           if (!isValidHomepage(homepage)) {
             invalidData = true
-            setHomepageError('Ungültige Homepage URL')
+            setHomepageError(invalidHomepageMessage)
           }
           if (invalidData) {
             toast({
               title: 'Fehler',
-              description: 'ungültige Eingabedaten',
+              description: invalidInputuDataMessage,
               status: 'error',
               duration: 5000,
               isClosable: true,
             })
             return
-          }
-
-          // Check homepage validity
-          if (!isValidHomepage(homepage)) {
-            setHomepageError('Ungültige Homepage URL')
-            return // Exit the function if the homepage is not valid
           }
 
           await axios.post('https://localhost:3000/rest', payload, { headers })
