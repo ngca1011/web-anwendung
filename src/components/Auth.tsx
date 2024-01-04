@@ -1,4 +1,12 @@
-import { createContext, useState, useContext, useEffect, type ReactNode } from 'react'
+import { API_URL } from '../consts'
+import {
+  type ReactElement,
+  createContext,
+  useState,
+  useContext,
+  useEffect,
+  type ReactNode,
+} from 'react'
 import axios from 'axios'
 import { useToast } from '@chakra-ui/react'
 
@@ -8,32 +16,35 @@ const AuthContext = createContext({
   logout: () => {},
 })
 
-const useAuthContext = () => useContext(AuthContext)
+const useAuthContext = (): {
+  isLoggedIn: boolean
+  login: (_username: string, _password: string) => Promise<void>
+  logout: () => void
+} => useContext(AuthContext)
 
-const AuthProvider = ({ children }: { children: ReactNode }) => {
+const AuthProvider = ({ children }: { children: ReactNode }): ReactElement => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const toast = useToast()
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
+    const token: string | null = localStorage.getItem('token')
     if (token !== null && token !== undefined) {
       setIsLoggedIn(true)
     }
   }, [])
 
-  const login = async (username: string, password: string) => {
+  const login = async (username: string, password: string): Promise<void> => {
     try {
-      const response = await axios.post('https://localhost:3000/auth/login', {
+      const response = await axios.post(`${API_URL}auth/login`, {
         username,
         password,
       })
 
       const { token, roles } = response.data
-      console.log(token)
 
       setIsLoggedIn(true)
-      localStorage.setItem('token', token)
-      localStorage.setItem('roles', roles)
+      localStorage.setItem('token', token as string)
+      localStorage.setItem('roles', roles as string)
 
       toast({
         title: 'Erfolgreich',
@@ -51,7 +62,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }
 
-  const logout = () => {
+  const logout = (): void => {
     localStorage.removeItem('token')
     setIsLoggedIn(false)
 
