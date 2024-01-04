@@ -39,6 +39,7 @@ const Buchanlegen = () => {
   const [rabattString, setRabattString] = useState<string>('0')
   const [homepage, setHomepage] = useState('')
   const today = format(new Date(), 'yyyy-MM-dd')
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const [datum, setDatum] = useState<string>(today)
 
   const formatPreis = (val: string | number | null) => `€` + val
@@ -264,8 +265,8 @@ const Buchanlegen = () => {
                     <NumberInput
                       defaultValue={0}
                       min={0}
-                      max={1}
-                      step={0.1}
+                      max={100}
+                      step={1}
                       onChange={(valueString) => {
                         setRabattString(valueString)
                       }}
