@@ -103,7 +103,34 @@ const Buchanlegen = () => {
 
       void (async () => {
         try {
+          let invalidData = false
+          if (!isValidISBN(isbn)) {
+            invalidData = true
+            setIsbnError('Ungültiges ISBN-Format')
+          }
+          if (!isValidHomepage(homepage)) {
+            invalidData = true
+            setHomepageError('Ungültige Homepage URL')
+          }
+          if (invalidData) {
+            toast({
+              title: 'Fehler',
+              description: 'ungültige Eingabedaten',
+              status: 'error',
+              duration: 5000,
+              isClosable: true,
+            })
+            return
+          }
+
+          // Check homepage validity
+          if (!isValidHomepage(homepage)) {
+            setHomepageError('Ungültige Homepage URL')
+            return // Exit the function if the homepage is not valid
+          }
+
           await axios.post('https://localhost:3000/rest', payload, { headers })
+
           toast({
             title: 'Erfolgreich',
             description: 'Buch erfolgreich angelegt',
