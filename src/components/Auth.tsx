@@ -1,6 +1,5 @@
 import { API_URL } from '../consts'
 import {
-  type ReactElement,
   createContext,
   useState,
   useContext,
@@ -22,7 +21,11 @@ const useAuthContext = (): {
   logout: () => void
 } => useContext(AuthContext)
 
-const AuthProvider = ({ children }: { children: ReactNode }): ReactElement => {
+const getToken = (): string | null => {
+  return localStorage.getItem('token');
+};
+
+const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const toast = useToast()
 
@@ -43,8 +46,8 @@ const AuthProvider = ({ children }: { children: ReactNode }): ReactElement => {
       const { token, roles } = response.data
 
       setIsLoggedIn(true)
-      localStorage.setItem('token', token as string)
-      localStorage.setItem('roles', roles as string)
+      localStorage.setItem('token', `Bearer ${token}`)
+      localStorage.setItem('roles', roles)
 
       toast({
         title: 'Erfolgreich',
@@ -78,4 +81,4 @@ const AuthProvider = ({ children }: { children: ReactNode }): ReactElement => {
   )
 }
 
-export { useAuthContext, AuthProvider }
+export { useAuthContext, AuthProvider, getToken }
