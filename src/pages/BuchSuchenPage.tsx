@@ -84,8 +84,7 @@ const Buchsuchen = () => {
         if (response.data._embedded.buecher.length === 0) {
           return 404
         }
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        setFetchedData(response.data)
+        setFetchedData(response.data as FetchedData)
         return 200
       } catch (error) {
         console.error('Fehler beim Abrufen der Daten:', error)
@@ -259,7 +258,13 @@ const Buchsuchen = () => {
         </Box>
       </SimpleGrid>
 
-      <Box display='flex' justifyContent='center' alignItems='center' marginBottom='4'>
+      <Box
+        display='flex'
+        justifyContent='center'
+        alignItems='center'
+        marginTop='4'
+        marginBottom='4'
+      >
         <Button
           onClick={() => {
             if (
@@ -271,7 +276,6 @@ const Buchsuchen = () => {
             ) {
               setSearchClicked(true)
             } else {
-              // Benutzer über leeres Suchfeld informieren
               toast({
                 title: 'Achtung',
                 description: 'Bitte geben Sie einen Titel oder eine ISBN für die Suche ein.',
