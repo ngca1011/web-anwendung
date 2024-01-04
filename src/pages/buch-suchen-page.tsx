@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import type { Book, FetchedData } from '../types/interfaces' // Import types using 'import type'
+import type { Book, FetchedData } from '../types/interfaces'
 
 import {
   FormHelperText,
@@ -40,12 +40,12 @@ const Buchsuchen = () => {
   const [titelValue, setTitelValue] = useState('')
   const [isbnValue, setIsbnValue] = useState('')
   const [searchClicked, setSearchClicked] = useState(false)
-  const [ratingValue, setRatingValue] = useState<number | null>(null) // Neue State-Variable für das Rating
+  const [ratingValue, setRatingValue] = useState<number | null>() // Neue State-Variable für das Rating
   const [druckausgabeChecked, setDruckausgabeChecked] = useState(false)
   const [kindleChecked, setKindleChecked] = useState(false)
   const [buchArtChecked, setBuchArtChecked] = useState(false)
   const [lieferbarValue, setLieferbarValue] = useState<string>('') // Neue State-Variable für Lieferbar
-  const [selectedBook, setSelectedBook] = useState<Book | null>(null) // Zustand für ausgewähltes Buch
+  const [selectedBook, setSelectedBook] = useState<Book | null>() // Zustand für ausgewähltes Buch
 
   const commonBoxStyles = {
     borderWidth: '1px',
@@ -55,32 +55,32 @@ const Buchsuchen = () => {
   }
 
   const [fetchedData, setFetchedData] = useState<FetchedData>({ _embedded: { buecher: [] } })
+  let apiUrl = 'https://localhost:3000/rest?'
+
+  if (titelValue.trim() !== '') {
+    apiUrl += `titel=${titelValue}`
+  }
+  if (isbnValue.trim() !== '') {
+    apiUrl += `&isbn=${isbnValue}`
+  }
+  if (ratingValue !== null && ratingValue !== undefined) {
+    apiUrl += `&rating=${ratingValue}`
+  }
+  if (druckausgabeChecked && !kindleChecked) {
+    apiUrl += '&art=DRUCKAUSGABE'
+    setBuchArtChecked(true)
+  } else if (kindleChecked && !druckausgabeChecked) {
+    apiUrl += '&art=KINDLE'
+    setBuchArtChecked(true)
+  }
+  if (lieferbarValue !== '') {
+    apiUrl += `&lieferbar=${lieferbarValue === 'Ja' ? 'true' : 'false'}`
+  }
+
   useEffect(() => {
     const fetchDataFromApi = async () => {
       try {
-        let apiUrl = 'https://localhost:3000/rest?'
-
-        if (titelValue.trim() !== '') {
-          apiUrl += `titel=${titelValue}`
-        }
-        if (isbnValue.trim() !== '') {
-          apiUrl += `&isbn=${isbnValue}`
-        }
-        if (ratingValue !== null) {
-          apiUrl += `&rating=${ratingValue}`
-        }
-        if (druckausgabeChecked && !kindleChecked) {
-          apiUrl += '&art=DRUCKAUSGABE'
-          setBuchArtChecked(true)
-        } else if (kindleChecked && !druckausgabeChecked) {
-          apiUrl += '&art=KINDLE'
-          setBuchArtChecked(true)
-        }
-        if (lieferbarValue !== '') {
-          apiUrl += `&lieferbar=${lieferbarValue === 'Ja' ? 'true' : 'false'}`
-        }
         const response = await axios.get(apiUrl)
-        console.log('Response data:', response.data)
         if (response.data._embedded.buecher.length === 0) {
           return 404
         }
@@ -213,8 +213,8 @@ const Buchsuchen = () => {
               <Checkbox
                 colorScheme='blue'
                 defaultChecked={druckausgabeChecked}
-                onChange={(e) => {
-                  setDruckausgabeChecked(e.target.checked)
+                onChange={(input) => {
+                  setDruckausgabeChecked(input.target.checked)
                 }}
               >
                 Druckausgabe
@@ -223,8 +223,8 @@ const Buchsuchen = () => {
               <Checkbox
                 colorScheme='blue'
                 defaultChecked={kindleChecked}
-                onChange={(e) => {
-                  setKindleChecked(e.target.checked)
+                onChange={(input) => {
+                  setKindleChecked(input.target.checked)
                 }}
               >
                 Kindle
@@ -340,11 +340,11 @@ const Buchsuchen = () => {
         </Table>
       </TableContainer>
 
-      {selectedBook != null && (
+      {selectedBook !== undefined && selectedBook !== null && (
         <Modal
           isOpen={true}
           onClose={() => {
-            setSelectedBook(null)
+            setSelectedBook(undefined)
           }}
         >
           <ModalOverlay />

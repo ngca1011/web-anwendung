@@ -1,3 +1,5 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable unicorn/consistent-function-scoping */
 import {
   Table,
   Thead,
@@ -39,11 +41,10 @@ const Buchanlegen = () => {
   const [rabattString, setRabattString] = useState<string>('0')
   const [homepage, setHomepage] = useState('')
   const today = format(new Date(), 'yyyy-MM-dd')
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const [datum, setDatum] = useState<string>(today)
 
-  const formatPreis = (val: string | number | null) => `€` + val
-  const parsePreis = (val: string) => val.replace(/^€/, '')
+  const formatPreis = (value: string | number | null) => `€` + value
+  const parsePreis = (value: string) => value.replace(/^€/, '')
 
   const toast = useToast()
 
@@ -55,8 +56,8 @@ const Buchanlegen = () => {
     isbn,
     rating,
     art,
-    preis: parseFloat(preisString),
-    rabatt: parseFloat(rabattString),
+    preis: Number.parseFloat(preisString),
+    rabatt: Number.parseFloat(rabattString),
     lieferbar: true,
     datum,
     homepage,
@@ -129,8 +130,8 @@ const Buchanlegen = () => {
                     <Input
                       name='titel'
                       value={titel}
-                      onChange={(e) => {
-                        setTitel(e.target.value)
+                      onChange={(error) => {
+                        setTitel(error.target.value)
                       }}
                     />
                   </FormControl>
@@ -145,8 +146,8 @@ const Buchanlegen = () => {
                     <Input
                       name='isbn'
                       value={isbn}
-                      onChange={(e) => {
-                        setIsbn(e.target.value)
+                      onChange={(input) => {
+                        setIsbn(input.target.value)
                       }}
                     />
                   </FormControl>
@@ -308,8 +309,8 @@ const Buchanlegen = () => {
                     <Input
                       name='homepage'
                       value={homepage}
-                      onChange={(e) => {
-                        setHomepage(e.target.value)
+                      onChange={(input) => {
+                        setHomepage(input.target.value)
                       }}
                     />
                   </FormControl>

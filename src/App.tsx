@@ -1,10 +1,10 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Navigation from './components/Navbar.tsx'
-import Home from './pages/HomePage.tsx'
-import Buchsuchen from './pages/BuchSuchenPage.tsx'
-import Buchanlegen from './pages/BuchCreatePage.tsx'
-import Login from './pages/LoginPage.tsx'
-import { AuthProvider } from './components/Auth.tsx'
+import Navigation from './components/navbar.tsx'
+import Home from './pages/home-page.tsx'
+import Buchsuchen from './pages/buch-suchen-page.tsx'
+import Buchanlegen from './pages/buch-create-page.tsx'
+import Login from './pages/login-page.tsx'
+import { AuthProvider } from './components/auth.tsx'
 
 function App() {
   return (
@@ -21,9 +21,9 @@ function App() {
           <Navigation />
           <Routes>
             <Route path='/' element={<Home />} />
-            <Route path='/buchsuchen' Component={Buchsuchen} />
-            <Route path='/buchanlegen' Component={Buchanlegen} />
-            <Route path='/anmelden' Component={Login} />
+            <Route path='/buchsuchen' element={<Buchsuchen />} />
+            <Route path='/buchanlegen' element={<Buchanlegen />} />
+            <Route path='/anmelden' element={<Login />} />
           </Routes>
         </div>
       </BrowserRouter>
