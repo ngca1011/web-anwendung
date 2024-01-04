@@ -35,19 +35,22 @@ const Buchanlegen = () => {
   const [titel, setTitel] = useState('')
   const [isbn, setIsbn] = useState('')
   const [rating, setRating] = useState<number | null>(1)
-  const [art, setArt] = useState('')
+  const [art, setArt] = useState('DRUCKAUSGABE')
   const [lieferbar, setLieferbar] = useState<string>('true')
   const [preisString, setPreisString] = useState<string>('10')
   const [rabattString, setRabattString] = useState<string>('0')
   const [homepage, setHomepage] = useState('')
   const today = format(new Date(), 'yyyy-MM-dd')
   const [datum, setDatum] = useState<string>(today)
+
   const [isbnError, setIsbnError] = useState('')
   const [homepageError, setHomepageError] = useState('')
+  const [titelError, setTitelError] = useState('')
 
   const invalidISBNMessage = 'Ungültiges ISBN-Format'
   const invalidHomepageMessage = 'Ungültige Homepage URL'
   const invalidInputuDataMessage = 'ungültige Eingabedaten'
+  const emptyTitelMessage = 'Titel darf nicht leer sein'
 
   const formatPreis = (val: string | number | null) => `€` + val
   const parsePreis = (val: string) => val.replace(/^€/, '')
@@ -98,6 +101,19 @@ const Buchanlegen = () => {
     }
   }
 
+  const checkInputData = () => {
+    if (titel === '') {
+      setTitelError(emptyTitelMessage)
+    } else if (!isValidISBN(isbn)) {
+      setIsbnError(invalidISBNMessage)
+    } else if (!isValidHomepage(homepage)) {
+      setHomepageError(invalidHomepageMessage)
+    } else {
+      return true
+    }
+    return false
+  }
+
   const handleBuchAnlegen = () => {
     try {
       const token = localStorage.getItem('token')
@@ -107,16 +123,7 @@ const Buchanlegen = () => {
 
       void (async () => {
         try {
-          let invalidData = false
-          if (!isValidISBN(isbn)) {
-            invalidData = true
-            setIsbnError(invalidISBNMessage)
-          }
-          if (!isValidHomepage(homepage)) {
-            invalidData = true
-            setHomepageError(invalidHomepageMessage)
-          }
-          if (invalidData) {
+          if (!checkInputData()) {
             toast({
               title: 'Fehler',
               description: invalidInputuDataMessage,
@@ -172,7 +179,7 @@ const Buchanlegen = () => {
               <Td>Titel</Td>
               <Td>
                 <Box maxW='300px'>
-                  <FormControl>
+                  <FormControl isInvalid={titelError !== ''}>
                     <Input
                       name='titel'
                       value={titel}
@@ -180,6 +187,7 @@ const Buchanlegen = () => {
                         setTitel(e.target.value)
                       }}
                     />
+                    <FormErrorMessage>{titelError}</FormErrorMessage>
                   </FormControl>
                 </Box>
               </Td>
@@ -188,7 +196,7 @@ const Buchanlegen = () => {
               <Td>ISBN Nummer</Td>
               <Td>
                 <Box maxW='300px'>
-                  <FormControl isInvalid={!(isbnError === '')}>
+                  <FormControl isInvalid={isbnError !== ''}>
                     <Input
                       name='isbn'
                       value={isbn}
