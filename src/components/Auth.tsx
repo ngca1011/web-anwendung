@@ -1,11 +1,5 @@
 import { API_URL } from '../consts'
-import {
-  createContext,
-  useState,
-  useContext,
-  useEffect,
-  type ReactNode,
-} from 'react'
+import { createContext, useState, useContext, useEffect, type ReactNode } from 'react'
 import axios from 'axios'
 import { useToast } from '@chakra-ui/react'
 
@@ -22,8 +16,8 @@ const useAuthContext = (): {
 } => useContext(AuthContext)
 
 const getToken = (): string | null => {
-  return localStorage.getItem('token');
-};
+  return localStorage.getItem('token')
+}
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)

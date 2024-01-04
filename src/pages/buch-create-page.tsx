@@ -25,8 +25,9 @@ import { useState } from 'react'
 import 'react-datepicker/dist/react-datepicker.css'
 import { format } from 'date-fns'
 import { isValidISBN, isValidHomepage } from '../utils/validation'
+import { getToken, useAuthContext } from '../components/auth'
 
-const formatPreis = (value: string | number | null): string => `€` + value
+const formatPreis = (value: string | number | null): string => `€${value}`
 const parsePreis = (value: string): string => value.replace(/^€/, '')
 const Buchanlegen = (): ReactElement => {
   const [titel, setTitel] = useState('')
@@ -40,6 +41,7 @@ const Buchanlegen = (): ReactElement => {
   const today = format(new Date(), 'yyyy-MM-dd')
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const [datum, setDatum] = useState<string>(today)
+  const { isLoggedIn } = useAuthContext()
 
   const [isbnError, setIsbnError] = useState('')
   const [homepageError, setHomepageError] = useState('')
@@ -120,11 +122,18 @@ const Buchanlegen = (): ReactElement => {
     return false
   }
 
-  const handleBuchAnlegen = (): void => {
+  const handleBuchAnlegen = () => {
+    if (!isLoggedIn) {
+      toast({
+        title: 'Fehler',
+        description: 'Benutzer ist nicht eingeloggt!',
+        status: 'error',
+      })
+      return
+    }
     try {
-      const token = localStorage.getItem('token')
       const headers = {
-        Authorization: `Bearer ${token}`,
+        Authorization: getToken(),
       }
 
       void (async () => {
@@ -171,7 +180,6 @@ const Buchanlegen = (): ReactElement => {
             Titel
           </Box>
           <Box padding='4'>
-            {' '}
             <FormControl isInvalid={titelError !== ''}>
               <Input
                 name='titel'
@@ -321,7 +329,6 @@ const Buchanlegen = (): ReactElement => {
             Rabatt
           </Box>
           <Box padding='4'>
-            {' '}
             <FormControl>
               <NumberInput
                 defaultValue={0}
@@ -349,7 +356,6 @@ const Buchanlegen = (): ReactElement => {
           </Box>
 
           <Box padding='4'>
-            {' '}
             <FormControl>
               <input
                 type='date'
@@ -369,7 +375,6 @@ const Buchanlegen = (): ReactElement => {
           </Box>
 
           <Box padding='4'>
-            {' '}
             <FormControl isInvalid={homepageError !== ''}>
               <Input
                 name='homepage'
