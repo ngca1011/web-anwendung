@@ -42,6 +42,7 @@ const Buchanlegen = () => {
   const today = format(new Date(), 'yyyy-MM-dd')
   const [datum, setDatum] = useState<string>(today)
   const [isbnError, setIsbnError] = useState('')
+  const [homepageError, setHomepageError] = useState('')
 
   const formatPreis = (val: string | number | null) => `€` + val
   const parsePreis = (val: string) => val.replace(/^€/, '')
@@ -71,6 +72,21 @@ const Buchanlegen = () => {
         href: '',
       },
     },
+  }
+
+  const isValidHomepage = (homepage: string) => {
+    const homepageRegex = /^(https?:\/\/)?([\w-]+\.)+([a-z]{2,})(\/\S*)?$/i
+    return homepageRegex.test(homepage)
+  }
+
+  const handleHomepageChange = (value: string) => {
+    setHomepage(value)
+
+    if (isValidHomepage(value)) {
+      setHomepageError('')
+    } else {
+      setHomepageError('ungültige Homepage URL')
+    }
   }
 
   const isValidISBN = (isbn: string) => {
@@ -321,14 +337,15 @@ const Buchanlegen = () => {
               <Td>Homepage</Td>
               <Td>
                 <Box maxW='300px'>
-                  <FormControl>
+                  <FormControl isInvalid={homepageError !== ''}>
                     <Input
                       name='homepage'
                       value={homepage}
                       onChange={(e) => {
-                        setHomepage(e.target.value)
+                        handleHomepageChange(e.target.value)
                       }}
                     />
+                    <FormErrorMessage>{homepageError}</FormErrorMessage>
                   </FormControl>
                 </Box>
               </Td>
