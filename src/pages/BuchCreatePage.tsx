@@ -23,17 +23,19 @@ import {
   NumberInputStepper,
   NumberIncrementStepper,
   NumberDecrementStepper,
+  FormErrorMessage,
 } from '@chakra-ui/react'
 import axios from 'axios'
 import { useState } from 'react'
 import 'react-datepicker/dist/react-datepicker.css'
 import { format } from 'date-fns'
+import { isValidISBN, isValidHomepage } from '../utils/validation'
 
 const Buchanlegen = () => {
   const [titel, setTitel] = useState('')
   const [isbn, setIsbn] = useState('')
   const [rating, setRating] = useState<number | null>(1)
-  const [art, setArt] = useState('')
+  const [art, setArt] = useState('DRUCKAUSGABE')
   const [lieferbar, setLieferbar] = useState<string>('true')
   const [preisString, setPreisString] = useState<string>('10')
   const [rabattString, setRabattString] = useState<string>('0')
@@ -41,6 +43,15 @@ const Buchanlegen = () => {
   const today = format(new Date(), 'yyyy-MM-dd')
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const [datum, setDatum] = useState<string>(today)
+
+  const [isbnError, setIsbnError] = useState('')
+  const [homepageError, setHomepageError] = useState('')
+  const [titelError, setTitelError] = useState('')
+
+  const invalidISBNMessage = 'Ungültiges ISBN-Format'
+  const invalidHomepageMessage = 'Ungültige Homepage URL'
+  const invalidInputuDataMessage = 'ungültige Eingabedaten'
+  const emptyTitelMessage = 'Titel darf nicht leer sein'
 
   const formatPreis = (val: string | number | null) => `€` + val
   const parsePreis = (val: string) => val.replace(/^€/, '')
@@ -72,6 +83,48 @@ const Buchanlegen = () => {
     },
   }
 
+  const handleHomepageChange = (value: string) => {
+    setHomepage(value)
+
+    if (isValidHomepage(value)) {
+      setHomepageError('')
+    } else {
+      setHomepageError(invalidHomepageMessage)
+    }
+  }
+
+  const handleTitelChange = (value: string) => {
+    setTitel(value)
+
+    if (value !== '') {
+      setTitelError('')
+    } else {
+      setTitelError(emptyTitelMessage)
+    }
+  }
+
+  const handleIsbnChange = (isbn: string) => {
+    setIsbn(isbn)
+    if (!isValidISBN(isbn)) {
+      setIsbnError(invalidISBNMessage)
+    } else {
+      setIsbnError('')
+    }
+  }
+
+  const checkInputData = () => {
+    if (titel === '') {
+      setTitelError(emptyTitelMessage)
+    } else if (!isValidISBN(isbn)) {
+      setIsbnError(invalidISBNMessage)
+    } else if (!isValidHomepage(homepage)) {
+      setHomepageError(invalidHomepageMessage)
+    } else {
+      return true
+    }
+    return false
+  }
+
   const handleBuchAnlegen = () => {
     try {
       const token = localStorage.getItem('token')
@@ -81,7 +134,19 @@ const Buchanlegen = () => {
 
       void (async () => {
         try {
+          if (!checkInputData()) {
+            toast({
+              title: 'Fehler',
+              description: invalidInputuDataMessage,
+              status: 'error',
+              duration: 5000,
+              isClosable: true,
+            })
+            return
+          }
+
           await axios.post('https://localhost:3000/rest', payload, { headers })
+
           toast({
             title: 'Erfolgreich',
             description: 'Buch erfolgreich angelegt',
@@ -125,14 +190,15 @@ const Buchanlegen = () => {
               <Td>Titel</Td>
               <Td>
                 <Box maxW='300px'>
-                  <FormControl>
+                  <FormControl isInvalid={titelError !== ''}>
                     <Input
                       name='titel'
                       value={titel}
                       onChange={(e) => {
-                        setTitel(e.target.value)
+                        handleTitelChange(e.target.value)
                       }}
                     />
+                    <FormErrorMessage>{titelError}</FormErrorMessage>
                   </FormControl>
                 </Box>
               </Td>
@@ -141,14 +207,15 @@ const Buchanlegen = () => {
               <Td>ISBN Nummer</Td>
               <Td>
                 <Box maxW='300px'>
-                  <FormControl>
+                  <FormControl isInvalid={isbnError !== ''}>
                     <Input
                       name='isbn'
                       value={isbn}
                       onChange={(e) => {
-                        setIsbn(e.target.value)
+                        handleIsbnChange(e.target.value)
                       }}
                     />
+                    <FormErrorMessage>{isbnError}</FormErrorMessage>
                   </FormControl>
                 </Box>
               </Td>
@@ -304,14 +371,15 @@ const Buchanlegen = () => {
               <Td>Homepage</Td>
               <Td>
                 <Box maxW='300px'>
-                  <FormControl>
+                  <FormControl isInvalid={homepageError !== ''}>
                     <Input
                       name='homepage'
                       value={homepage}
                       onChange={(e) => {
-                        setHomepage(e.target.value)
+                        handleHomepageChange(e.target.value)
                       }}
                     />
+                    <FormErrorMessage>{homepageError}</FormErrorMessage>
                   </FormControl>
                 </Box>
               </Td>
