@@ -27,7 +27,7 @@ import { useState } from 'react'
 import 'react-datepicker/dist/react-datepicker.css'
 import { format } from 'date-fns'
 import { isValidISBN, isValidHomepage } from '../utils/validation'
-import { getToken, useAuthContext } from '../components/auth'
+import { getToken, useAuthContext } from '../components/authentication'
 
 const formatPreis = (value: string | number | null): string => `€${value}`
 const parsePreis = (value: string): string => value.replace(/^€/, '')

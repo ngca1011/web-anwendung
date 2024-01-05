@@ -1,6 +1,6 @@
 import { Box, Flex, Icon, Link, Spacer } from '@chakra-ui/react'
 import { MdPerson } from 'react-icons/md'
-import { useAuthContext } from './auth.tsx'
+import { useAuthContext } from './authentication.tsx'
 import { FiBook } from 'react-icons/fi'
 import type { ReactElement } from 'react'
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { App } from './app.tsx'
+import { App } from './application.tsx'
 import { ChakraProvider } from '@chakra-ui/react'
 
 const rootElement = document.querySelector('#root')

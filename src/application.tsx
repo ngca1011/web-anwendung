@@ -1,10 +1,10 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { Navigation } from './components/navbar.tsx'
+import { Navigation } from './components/navigation-bar.tsx'
 import { Home } from './pages/home-page.tsx'
 import { Buchsuchen } from './pages/buch-suchen-page.tsx'
 import { Buchanlegen } from './pages/buch-create-page.tsx'
 import { Login } from './pages/login-page.tsx'
-import { AuthProvider } from './components/auth.tsx'
+import { AuthProvider } from './components/authentication.tsx'
 import type { ReactElement } from 'react'
 
 const App = (): ReactElement => (
