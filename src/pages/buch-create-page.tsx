@@ -25,8 +25,9 @@ import { useState } from 'react'
 import 'react-datepicker/dist/react-datepicker.css'
 import { format } from 'date-fns'
 import { isValidISBN, isValidHomepage } from '../utils/validation'
+import { getToken, useAuthContext } from '../components/auth'
 
-const formatPreis = (value: string | number | null): string => `€` + value
+const formatPreis = (value: string | number | null): string => `€${value}`
 const parsePreis = (value: string): string => value.replace(/^€/, '')
 const Buchanlegen = (): ReactElement => {
   const [titel, setTitel] = useState('')
@@ -38,8 +39,11 @@ const Buchanlegen = (): ReactElement => {
   const [rabattString, setRabattString] = useState<string>('0')
   const [homepage, setHomepage] = useState('')
   const today = format(new Date(), 'yyyy-MM-dd')
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const [datum, setDatum] = useState<string>(today)
+  const { isLoggedIn } = useAuthContext()
+  const [isTYPESCRIPT, setIsTYPESCRIPT] = useState(false)
+  const [isJAVASCRIPT, setIsJAVASCRIPT] = useState(false)
+  const [schlagwoerter, setSchlagwoerter] = useState<string[]>([])
 
   const [isbnError, setIsbnError] = useState('')
   const [homepageError, setHomepageError] = useState('')
@@ -71,7 +75,7 @@ const Buchanlegen = (): ReactElement => {
     lieferbar: true,
     datum,
     homepage,
-    schlagwoerter: [],
+    schlagwoerter,
     titel: {
       titel,
       untertitel: '',
@@ -120,11 +124,26 @@ const Buchanlegen = (): ReactElement => {
     return false
   }
 
+  const buildSchlagwoerter = (): void => {
+    const builtSchlagwoerter: string[] = []
+    if (isJAVASCRIPT) builtSchlagwoerter.push('JAVASCRIPT')
+    if (isTYPESCRIPT) builtSchlagwoerter.push('TYPESCRIPT')
+    setSchlagwoerter(builtSchlagwoerter)
+  }
+
   const handleBuchAnlegen = (): void => {
+    if (!isLoggedIn) {
+      toast({
+        title: 'Fehler',
+        description: 'Benutzer ist nicht eingeloggt!',
+        status: 'error',
+      })
+      return
+    }
+    buildSchlagwoerter()
     try {
-      const token = localStorage.getItem('token')
       const headers = {
-        Authorization: `Bearer ${token}`,
+        Authorization: getToken(),
       }
 
       void (async () => {
@@ -171,7 +190,6 @@ const Buchanlegen = (): ReactElement => {
             Titel
           </Box>
           <Box padding='4'>
-            {' '}
             <FormControl isInvalid={titelError !== ''}>
               <Input
                 name='titel'
@@ -321,7 +339,6 @@ const Buchanlegen = (): ReactElement => {
             Rabatt
           </Box>
           <Box padding='4'>
-            {' '}
             <FormControl>
               <NumberInput
                 defaultValue={0}
@@ -349,7 +366,6 @@ const Buchanlegen = (): ReactElement => {
           </Box>
 
           <Box padding='4'>
-            {' '}
             <FormControl>
               <input
                 type='date'
@@ -365,11 +381,37 @@ const Buchanlegen = (): ReactElement => {
         </Box>
         <Box style={commonBoxStyles}>
           <Box padding={4} borderRightWidth={1} fontWeight='bold'>
+            Schlagwörter
+          </Box>
+
+          <Box padding='4'>
+            <Stack spacing={5} direction='row'>
+              <Checkbox
+                colorScheme='blue'
+                onChange={() => {
+                  setIsTYPESCRIPT(true)
+                }}
+              >
+                TYPESCRIPT
+              </Checkbox>
+
+              <Checkbox
+                colorScheme='blue'
+                onChange={() => {
+                  setIsJAVASCRIPT(true)
+                }}
+              >
+                JAVASCRIPT
+              </Checkbox>
+            </Stack>
+          </Box>
+        </Box>
+        <Box style={commonBoxStyles}>
+          <Box padding={4} borderRightWidth={1} fontWeight='bold'>
             Homepage
           </Box>
 
           <Box padding='4'>
-            {' '}
             <FormControl isInvalid={homepageError !== ''}>
               <Input
                 name='homepage'

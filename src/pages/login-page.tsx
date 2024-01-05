@@ -1,5 +1,3 @@
-// eslint-disable-next-line eslint-comments/disable-enable-pair
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import { useState } from 'react'
 import type { ReactElement } from 'react'
 import { Center, Box, Heading, Button, Input } from '@chakra-ui/react'
@@ -10,10 +8,9 @@ const Login = (): ReactElement => {
   const [password, setPassword] = useState('')
   const { isLoggedIn, login, logout } = useAuthContext()
 
-  const handleLogin = async (): Promise<void> => {
-    await login(username, password)
+  const handleLogin = (): void => {
+    void login(username, password)
   }
-
   const handleLogout = (): void => {
     logout()
   }
@@ -25,8 +22,7 @@ const Login = (): ReactElement => {
       <Center h='45vh'>
         <Box textAlign='center'>
           <Heading marginBottom='50' fontSize='30'>
-            {' '}
-            Sie sind als {roles} eingeloggt!{' '}
+            Sie sind als {roles} eingeloggt!
           </Heading>
           <Button color='blue' outlineColor='black' textAlign='center' onClick={handleLogout}>
             Abmelden

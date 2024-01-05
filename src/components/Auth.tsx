@@ -1,11 +1,11 @@
 import { API_URL } from '../consts'
 import {
-  type ReactElement,
   createContext,
   useState,
   useContext,
   useEffect,
   type ReactNode,
+  type ReactElement,
 } from 'react'
 import axios from 'axios'
 import { useToast } from '@chakra-ui/react'
@@ -21,6 +21,10 @@ const useAuthContext = (): {
   login: (_username: string, _password: string) => Promise<void>
   logout: () => void
 } => useContext(AuthContext)
+
+const getToken = (): string | null => {
+  return localStorage.getItem('token')
+}
 
 const AuthProvider = ({ children }: { children: ReactNode }): ReactElement => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -43,7 +47,7 @@ const AuthProvider = ({ children }: { children: ReactNode }): ReactElement => {
       const { token, roles } = response.data
 
       setIsLoggedIn(true)
-      localStorage.setItem('token', token as string)
+      localStorage.setItem('token', `Bearer ${token}`)
       localStorage.setItem('roles', roles as string)
 
       toast({
@@ -78,4 +82,4 @@ const AuthProvider = ({ children }: { children: ReactNode }): ReactElement => {
   )
 }
 
-export { useAuthContext, AuthProvider }
+export { useAuthContext, AuthProvider, getToken }
