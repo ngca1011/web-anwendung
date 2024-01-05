@@ -41,9 +41,7 @@ const Buchanlegen = (): ReactElement => {
   const today = format(new Date(), 'yyyy-MM-dd')
   const [datum, setDatum] = useState<string>(today)
   const { isLoggedIn } = useAuthContext()
-  const [isTYPESCRIPT, setIsTYPESCRIPT] = useState(false)
-  const [isJAVASCRIPT, setIsJAVASCRIPT] = useState(false)
-  const [schlagwoerter, setSchlagwoerter] = useState<string[]>([])
+  const [selectedSchlagwoerter, setSelectedSchlagwoerter] = useState(new Set())
 
   const [isbnError, setIsbnError] = useState('')
   const [homepageError, setHomepageError] = useState('')
@@ -64,22 +62,6 @@ const Buchanlegen = (): ReactElement => {
     borderRadius: 'md',
     overflow: 'hidden',
     boxShadow: 'md',
-  }
-
-  const payload = {
-    isbn,
-    rating,
-    art,
-    preis: Number.parseFloat(preisString),
-    rabatt: Number.parseFloat(rabattString),
-    lieferbar: true,
-    datum,
-    homepage,
-    schlagwoerter,
-    titel: {
-      titel,
-      untertitel: '',
-    },
   }
 
   const handleHomepageChange = (value: string): void => {
@@ -124,14 +106,19 @@ const Buchanlegen = (): ReactElement => {
     return false
   }
 
-  const buildSchlagwoerter = (): void => {
-    const builtSchlagwoerter: string[] = []
-    if (isJAVASCRIPT) builtSchlagwoerter.push('JAVASCRIPT')
-    if (isTYPESCRIPT) builtSchlagwoerter.push('TYPESCRIPT')
-    setSchlagwoerter(builtSchlagwoerter)
+  const handleSchlagwoerterSelection = (schlagwort: string): void => {
+    const newSet = new Set(selectedSchlagwoerter)
+
+    if (newSet.has(schlagwort)) {
+      newSet.delete(schlagwort)
+    } else {
+      newSet.add(schlagwort)
+    }
+    setSelectedSchlagwoerter(newSet)
   }
 
   const handleBuchAnlegen = (): void => {
+    console.log(selectedSchlagwoerter)
     if (!isLoggedIn) {
       toast({
         title: 'Fehler',
@@ -140,8 +127,24 @@ const Buchanlegen = (): ReactElement => {
       })
       return
     }
-    buildSchlagwoerter()
     try {
+      console.log(selectedSchlagwoerter)
+      const payload = {
+        isbn,
+        rating,
+        art,
+        preis: Number.parseFloat(preisString),
+        rabatt: Number.parseFloat(rabattString),
+        lieferbar: true,
+        datum,
+        homepage,
+        // eslint-disable-next-line unicorn/prefer-spread
+        schlagwoerter: Array.from(selectedSchlagwoerter),
+        titel: {
+          titel,
+          untertitel: '',
+        },
+      }
       const headers = {
         Authorization: getToken(),
       }
@@ -164,10 +167,10 @@ const Buchanlegen = (): ReactElement => {
             description: 'Buch erfolgreich angelegt',
             status: 'success',
           })
-        } catch {
+        } catch (error) {
           toast({
             title: 'Fehler',
-            description: 'Buch konnte nicht angelegt werden',
+            description: error.response.data.message,
             status: 'error',
           })
         }
@@ -388,8 +391,9 @@ const Buchanlegen = (): ReactElement => {
             <Stack spacing={5} direction='row'>
               <Checkbox
                 colorScheme='blue'
+                isChecked={selectedSchlagwoerter.has('TYPESCRIPT')}
                 onChange={() => {
-                  setIsTYPESCRIPT(true)
+                  handleSchlagwoerterSelection('TYPESCRIPT')
                 }}
               >
                 TYPESCRIPT
@@ -397,8 +401,9 @@ const Buchanlegen = (): ReactElement => {
 
               <Checkbox
                 colorScheme='blue'
+                isChecked={selectedSchlagwoerter.has('JAVASCRIPT')}
                 onChange={() => {
-                  setIsJAVASCRIPT(true)
+                  handleSchlagwoerterSelection('JAVASCRIPT')
                 }}
               >
                 JAVASCRIPT
