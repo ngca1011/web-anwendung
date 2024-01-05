@@ -41,6 +41,9 @@ const Buchanlegen = (): ReactElement => {
   const today = format(new Date(), 'yyyy-MM-dd')
   const [datum, setDatum] = useState<string>(today)
   const { isLoggedIn } = useAuthContext()
+  const [isTYPESCRIPT, setIsTYPESCRIPT] = useState(false)
+  const [isJAVASCRIPT, setIsJAVASCRIPT] = useState(false)
+  const [schlagwoerter, setSchlagwoerter] = useState<string[]>([])
 
   const [isbnError, setIsbnError] = useState('')
   const [homepageError, setHomepageError] = useState('')
@@ -72,7 +75,7 @@ const Buchanlegen = (): ReactElement => {
     lieferbar: true,
     datum,
     homepage,
-    schlagwoerter: [],
+    schlagwoerter,
     titel: {
       titel,
       untertitel: '',
@@ -121,6 +124,13 @@ const Buchanlegen = (): ReactElement => {
     return false
   }
 
+  const buildSchlagwoerter = (): void => {
+    const builtSchlagwoerter: string[] = []
+    if (isJAVASCRIPT) builtSchlagwoerter.push('JAVASCRIPT')
+    if (isTYPESCRIPT) builtSchlagwoerter.push('TYPESCRIPT')
+    setSchlagwoerter(builtSchlagwoerter)
+  }
+
   const handleBuchAnlegen = (): void => {
     if (!isLoggedIn) {
       toast({
@@ -130,6 +140,7 @@ const Buchanlegen = (): ReactElement => {
       })
       return
     }
+    buildSchlagwoerter()
     try {
       const headers = {
         Authorization: getToken(),
@@ -366,6 +377,33 @@ const Buchanlegen = (): ReactElement => {
                 }}
               />
             </FormControl>
+          </Box>
+        </Box>
+        <Box style={commonBoxStyles}>
+          <Box padding={4} borderRightWidth={1} fontWeight='bold'>
+            Schlagwörter
+          </Box>
+
+          <Box padding='4'>
+            <Stack spacing={5} direction='row'>
+              <Checkbox
+                colorScheme='blue'
+                onChange={() => {
+                  setIsTYPESCRIPT(true)
+                }}
+              >
+                TYPESCRIPT
+              </Checkbox>
+
+              <Checkbox
+                colorScheme='blue'
+                onChange={() => {
+                  setIsJAVASCRIPT(true)
+                }}
+              >
+                JAVASCRIPT
+              </Checkbox>
+            </Stack>
           </Box>
         </Box>
         <Box style={commonBoxStyles}>

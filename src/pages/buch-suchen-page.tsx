@@ -166,7 +166,7 @@ const Buchsuchen = (): ReactElement => {
                 }}
                 placeholder='Titel eingeben'
               />
-            </FormControl>{' '}
+            </FormControl>
           </Box>
         </Box>
 
@@ -209,7 +209,7 @@ const Buchsuchen = (): ReactElement => {
                   </MenuItem>
                 ))}
               </MenuList>
-            </Menu>{' '}
+            </Menu>
           </Box>
         </Box>
 
@@ -239,7 +239,7 @@ const Buchsuchen = (): ReactElement => {
               >
                 Kindle
               </Checkbox>
-            </Stack>{' '}
+            </Stack>
           </Box>
         </Box>
 
@@ -263,7 +263,7 @@ const Buchsuchen = (): ReactElement => {
                   Nein
                 </Radio>
               </Stack>
-            </RadioGroup>{' '}
+            </RadioGroup>
           </Box>
         </Box>
       </SimpleGrid>
