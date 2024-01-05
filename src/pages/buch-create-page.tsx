@@ -39,7 +39,6 @@ const Buchanlegen = (): ReactElement => {
   const [rabattString, setRabattString] = useState<string>('0')
   const [homepage, setHomepage] = useState('')
   const today = format(new Date(), 'yyyy-MM-dd')
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const [datum, setDatum] = useState<string>(today)
   const { isLoggedIn } = useAuthContext()
 
@@ -122,7 +121,7 @@ const Buchanlegen = (): ReactElement => {
     return false
   }
 
-  const handleBuchAnlegen = () => {
+  const handleBuchAnlegen = (): void => {
     if (!isLoggedIn) {
       toast({
         title: 'Fehler',

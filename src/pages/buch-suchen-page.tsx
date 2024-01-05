@@ -336,7 +336,7 @@ const Buchsuchen = (): ReactElement => {
                     {buch.homepage}
                   </a>
                 </Td>
-                <Td>{buch.schlagwoerter.join(', ')}</Td>
+                <Td>{buch.schlagwoerter === null ? '' : buch.schlagwoerter.join(', ')}</Td>
                 <Td>
                   <a href={buch._links.self.href} target='_blank' rel='noopener noreferrer'>
                     {buch._links.self.href}
