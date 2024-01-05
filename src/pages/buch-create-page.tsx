@@ -68,7 +68,7 @@ const Buchanlegen = (): ReactElement => {
     art,
     preis: Number.parseFloat(preisString),
     rabatt: Number.parseFloat(rabattString),
-    lieferbar: true,
+    lieferbar: lieferbar === 'true',
     datum,
     homepage,
     schlagwoerter,
