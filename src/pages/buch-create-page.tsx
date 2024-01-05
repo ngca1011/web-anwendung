@@ -19,6 +19,8 @@ import {
   NumberDecrementStepper,
   FormErrorMessage,
   SimpleGrid,
+  RadioGroup,
+  Radio,
 } from '@chakra-ui/react'
 import axios from 'axios'
 import { useState } from 'react'
@@ -41,8 +43,6 @@ const Buchanlegen = (): ReactElement => {
   const today = format(new Date(), 'yyyy-MM-dd')
   const [datum, setDatum] = useState<string>(today)
   const { isLoggedIn } = useAuthContext()
-  const [isTYPESCRIPT, setIsTYPESCRIPT] = useState(false)
-  const [isJAVASCRIPT, setIsJAVASCRIPT] = useState(false)
   const [schlagwoerter, setSchlagwoerter] = useState<string[]>([])
 
   const [isbnError, setIsbnError] = useState('')
@@ -54,10 +54,6 @@ const Buchanlegen = (): ReactElement => {
   const emptyTitelMessage = 'Titel darf nicht leer sein'
 
   const toast = useToast()
-
-  const handleArtChange = (value: string): void => {
-    setArt(value)
-  }
 
   const commonBoxStyles = {
     borderWidth: '1px',
@@ -89,6 +85,14 @@ const Buchanlegen = (): ReactElement => {
       setHomepageError('')
     } else {
       setHomepageError(invalidHomepageMessage)
+    }
+  }
+
+  const handleSchlagwoerterChange = (value: string): void => {
+    if (schlagwoerter.includes(value)) {
+      setSchlagwoerter((previousItems) => previousItems.filter((item) => item !== value))
+    } else {
+      setSchlagwoerter((previousItems) => [...previousItems, value])
     }
   }
 
@@ -124,13 +128,6 @@ const Buchanlegen = (): ReactElement => {
     return false
   }
 
-  const buildSchlagwoerter = (): void => {
-    const builtSchlagwoerter: string[] = []
-    if (isJAVASCRIPT) builtSchlagwoerter.push('JAVASCRIPT')
-    if (isTYPESCRIPT) builtSchlagwoerter.push('TYPESCRIPT')
-    setSchlagwoerter(builtSchlagwoerter)
-  }
-
   const handleBuchAnlegen = (): void => {
     if (!isLoggedIn) {
       toast({
@@ -140,7 +137,6 @@ const Buchanlegen = (): ReactElement => {
       })
       return
     }
-    buildSchlagwoerter()
     try {
       const headers = {
         Authorization: getToken(),
@@ -158,7 +154,6 @@ const Buchanlegen = (): ReactElement => {
           }
 
           await axios.post(`${API_URL}rest`, payload, { headers })
-
           toast({
             title: 'Erfolgreich',
             description: 'Buch erfolgreich angelegt',
@@ -252,28 +247,21 @@ const Buchanlegen = (): ReactElement => {
           </Box>
 
           <Box padding='4'>
-            <FormControl>
-              <Stack direction='row'>
-                <Checkbox
-                  name='art'
-                  isChecked={art === 'DRUCKAUSGABE'}
-                  onChange={() => {
-                    handleArtChange('DRUCKAUSGABE')
-                  }}
-                >
+            <RadioGroup
+              value={art}
+              onChange={(value) => {
+                setArt(value)
+              }}
+            >
+              <Stack spacing={5} direction='row'>
+                <Radio colorScheme='blue' value='DRUCKAUSGABE'>
                   Druckausgabe
-                </Checkbox>
-                <Checkbox
-                  name='isKindle'
-                  isChecked={art === 'KINDLE'}
-                  onChange={() => {
-                    handleArtChange('KINDLE')
-                  }}
-                >
+                </Radio>
+                <Radio colorScheme='blue' value='KINDLE'>
                   Kindle
-                </Checkbox>
+                </Radio>
               </Stack>
-            </FormControl>
+            </RadioGroup>
           </Box>
         </Box>
 
@@ -283,28 +271,21 @@ const Buchanlegen = (): ReactElement => {
           </Box>
 
           <Box padding='4'>
-            <FormControl>
-              <Stack direction='row'>
-                <Checkbox
-                  name='lieferbar'
-                  isChecked={lieferbar === 'true'}
-                  onChange={() => {
-                    setLieferbar('true')
-                  }}
-                >
+            <RadioGroup
+              value={lieferbar}
+              onChange={(value) => {
+                setLieferbar(value)
+              }}
+            >
+              <Stack spacing={5} direction='row'>
+                <Radio colorScheme='blue' value='true'>
                   Ja
-                </Checkbox>
-                <Checkbox
-                  name='lieferbar'
-                  isChecked={lieferbar === 'false'}
-                  onChange={() => {
-                    setLieferbar('false')
-                  }}
-                >
+                </Radio>
+                <Radio colorScheme='blue' value='false'>
                   Nein
-                </Checkbox>
+                </Radio>
               </Stack>
-            </FormControl>
+            </RadioGroup>
           </Box>
         </Box>
 
@@ -389,7 +370,7 @@ const Buchanlegen = (): ReactElement => {
               <Checkbox
                 colorScheme='blue'
                 onChange={() => {
-                  setIsTYPESCRIPT(true)
+                  handleSchlagwoerterChange('TYPESCRIPT')
                 }}
               >
                 TYPESCRIPT
@@ -398,7 +379,7 @@ const Buchanlegen = (): ReactElement => {
               <Checkbox
                 colorScheme='blue'
                 onChange={() => {
-                  setIsJAVASCRIPT(true)
+                  handleSchlagwoerterChange('JAVASCRIPT')
                 }}
               >
                 JAVASCRIPT
